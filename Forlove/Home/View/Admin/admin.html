@@ -1,0 +1,44 @@
+<include file="Public:adminheader" />
+<script>
+		function shanchu(){
+		if(confirm("确定删除？")){
+			return true;
+		}else{
+			return false;
+		}
+	}
+</script>
+<div class="admin">
+	<table class="am-table am-table-bordered">
+		<thead>
+			<tr>
+				<th>告白者</th>
+				<th>被告白者</th>
+				<th>内容</th>
+				<th>email</th>
+				<th>ip</th>
+				<th width="70px">删除</th>
+			</tr>
+		</thead>
+		<tbody>
+			<volist name="list" id="vo">
+				<tr>
+					<td>{$vo.realname}</td>
+					<td>{$vo.towho}</td>
+					<td>{$vo.content}</td>
+					<td>{$vo.email}</td>
+					<td>{$vo.ip}</td>
+					<td><a href="__URL__/del/id/{$vo.id}" onclick="return shanchu()">删除</a></td>
+				</tr>
+			</volist>
+		</tbody>
+	</table>
+	{$data}
+</div>
+</div>
+<div class="footer">
+	<p>版权所有 &copy; 天空网络科技</p>
+	<p>Prowered by Skymz.cc</p>
+	</div>
+</body>
+</html>

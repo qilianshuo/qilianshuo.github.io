@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>{:W('info/info',array('sitename'))}</title>
+	<link rel="stylesheet" href="__PUBLIC__/Forlove/style.css">
+	<script type="text/javascript" src="__PUBLIC__/Js/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/Forlove/forlove.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+	<script>
+	var URL = "__URL__";
+    var APP = "__APP__";
+    $(function(){
+    	if({:W('info/info',array('noticflag'))}==1){
+    		$.get('__URL__/nc', function(data) {
+    		$(".wenc").html(data);
+    		$(".ncmask").fadeIn(200);
+    		});
+    	}
+    })
+	</script>
+	<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"slide":{"type":"slide","bdImg":"2","bdPos":"right","bdTop":"100"}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+</head>
+<body>
+	<div class="header">
+		<div class="tophead">
+			<h1>{:W('info/info',array('sitename'))}</h1>
+		</div>
+		<img src="__PUBLIC__/Forlove/logo.png" alt="告白墙" class="logo"><br>
+		<EMBED src="http://love.skymz.cc/music.mp3" loop="true" width="0" height="0">
+		<a href="javascript:" class="butt">我要表白</a>
+		<div class="nav">
+			<ul>
+				<li><a href="javascript:" id="ilink">首页</a></li>
+				<li><a href="javascript:" id="slink">搜索</a></li>
+				<li><a href="javascript:" id="alink">关于</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="search">
+		<form action="" onsubmit="return false" class="sform">
+			<input type="text" name="sinput" placeholder="请输入您要搜索姓名" class="his sin">
+			<div class="sjiao">搜索</div>
+		</form>
+	</div>

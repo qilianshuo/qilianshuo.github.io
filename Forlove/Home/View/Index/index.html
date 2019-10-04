@@ -1,0 +1,88 @@
+<include file="Public:header" />
+<div class="ncmask">
+	<div class="allnotic">
+	<div class="cls"><a href="javascript:cls()" class="node">X</a></div>
+	<div class="wenc">
+		提示
+	</div>
+</div>
+</div>
+<div class="wrap">
+<div class="main">
+	<volist name="list" id="vo">
+		<div class="point">
+		<div class="zzan">
+			<a href="javascript:" class="jzan"><span id="{$vo.id}">{$vo.zan}</span><img src="__PUBLIC__/Forlove/zan.png" alt="" class="zan"></a>	
+		</div>
+			<div class="ptop">
+				<img src="http://q.qlogo.cn/headimg_dl?dst_uin={$vo.avatar}&spec=100" alt="" class="avatar">
+				<div class="pp">
+				<span class="pname">{$vo.realname}</span><br><span class="ptime">{$vo.lastdate}</span>
+				</div>
+			</div>
+			<div class="pmain">
+				<p><span class="towho">{$vo.towho}</span>{$vo.content}</p>
+			</div>
+			<div class="pf">
+				<ul id="reply-{$vo.id}" class="hidethis">
+					<volist name="vo.reply" id="vo1">
+						<li class='replys'><p><span class='replyname'>{$vo1.nname}</span>：{$vo1.reply}</p></li>
+					</volist>
+				</ul>
+				<a href="javascript:" class="more">点击展开更多...</a>
+				<script>
+				$(function(){
+					if($("#reply-{$vo.id}").height()>100){
+								$("#reply-{$vo.id}").css({"height":"100px","overflow":"hidden"});
+								$("#reply-{$vo.id}").next().show();
+							}
+				})
+				</script>
+				<form action="" method="post" onsubmit="return false">
+					<div class="line">
+						<input type="text" name="reply" placeholder="我也说两句" class="pliu">
+						<div class="pjiao" id="{$vo.id}">提交</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</volist>
+	<div class="page">{$data}</div>
+</div>
+<div class="notic">测试测试</div>
+<div class="hidemask2">
+<div class="hideform">
+	<form action="" id="reply2" onsubmit="return false">
+		<p>请填写您的相关信息<span class="close"><a href="javascript:closes()" class="node">X</a></span></p>
+		<input type="hidden" name="id" value="" id="hiid">
+		<input type="hidden" name="reply" value="" id="hireply">
+		<p><input type="text" name="email" id="email" placeholder="邮箱（必填）" class="his"></p>
+		<p><input type="text" name="nname" id="realname" placeholder="昵称（必填）" class="his"></p>
+		<p><input type="submit" value="提交" class="hisu"></p>
+	</form>
+</div>
+</div>
+<div class="hidemask">
+<div class="hidegaobai">
+	<form action="" onsubmit="return false" id="gaobai">
+		<p>我要告白<span class="close"><a href="javascript:closes()" class="node">X</a></span></p>
+		<p><input type="text" name="email" placeholder="邮箱（必填）" class="his" id="gemail" value="{$Think.session.email}"></p>
+		<p><input type="text" name="qq" id="qq" placeholder="QQ（用于获取头像）" class="his" value="{$Think.session.qq}"></p>
+		<p><input type="text" name="realname" placeholder="我的名称..." class="his" id="grealname" value="{$Think.session.nname}"></p>
+		<p><input type="text" name="towho" placeholder="告白对象..." class="his" id="gtowho"></p>
+		<p><textarea name="content" cols="30" rows="5" placeholder="这是我要说的话" class="his" id="gcontent"></textarea></p>
+		<p><input type="submit" value="发布" class="hidegaobaisubmit"></p>
+	</form>
+</div>
+</div>
+<div class="load">
+	<div class="spinner">
+	  <div class="rect1"></div>
+	  <div class="rect2"></div>
+	  <div class="rect3"></div>
+	  <div class="rect4"></div>
+	  <div class="rect5"></div>
+	</div>	
+</div>
+</div>
+<include file="Public:footer" />

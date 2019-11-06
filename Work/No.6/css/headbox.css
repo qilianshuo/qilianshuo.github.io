@@ -1,0 +1,116 @@
+.qq-top .top-logo {
+	width: 131px;
+	height: 37px;
+	margin: 23px 0 0
+}
+
+.qq-top .top-logo {
+		margin: 18px 0 0
+}
+
+.fr {
+	float: right
+}
+	
+.top-search .searchMenu {
+	position: relative;
+	width: 68px;
+	color: #404040
+}
+
+.top-search .searchMenu .searchSelected,
+.top-search .searchMenu .searchSelectedUp {
+	color: #404040;
+	padding: 0 19px;
+	cursor: pointer;
+	font-size: 14px
+}
+
+.top-search .searchMenu .searchSelected::after,
+
+.top-search .searchMenu .searchTab {
+	display: none;
+	position: absolute;
+	top: 33px;
+	left: 0;
+	line-height: 28px;
+	padding: 0 20px 10px;
+	background: #fff;
+	text-align: center;
+	z-index: 20
+}
+
+.top-search .searchMenu .searchTab li {
+	color: #a8a8a8;
+	font-size: 14px;
+	cursor: pointer;
+	border-bottom: 3px solid #FFF
+}
+
+.top-search .searchMenu .searchTab li.selected,
+.top-search .searchMenu .searchTab li:hover {
+	
+}
+
+.top-search input {
+	float: left;
+	border: 0;
+	font-size: 14px;
+	line-height: 22px;
+	width: 300px;
+	height: 24px;
+	padding: 4px 10px;
+	background: none
+}
+
+.top-search input:focus {
+	outline: none;
+	background: none
+}
+
+.searchBtn {
+	position: relative;
+	top: -1px;
+	right: -1px;
+	background: none;
+	border: none;
+	height: 34px;
+	line-height: 34px;
+	padding: 0 23px;
+	color: #FFF;
+	background-color: #1479d7;
+	-webkit-border-radius: 20px;
+	-moz-border-radius: 20px;
+	-ms-border-radius: 20px;
+	-o-border-radius: 20px;
+	border-radius: 20px;
+	font-size: 16px;
+	cursor: pointer;
+	font-family: 'Microsoft Yahei', 'PingFang SC';
+	margin: 0
+}
+
+.top-search .searchMenu:hover .searchTab {
+	display: block
+}
+
+.top-search .searchMenu:hover .searchSelected::after,
+.top-search .searchMenu:hover .searchSelectedUp::after {
+	background-position: 0 -30px
+}
+
+.top-search {
+	position: relative;
+	height: 32px;
+	line-height: 32px;
+	margin: 23px 0 0 318px;
+	border: 1px solid #dfdfdf;
+	background-color: #f3f6f8;
+	-webkit-border-radius: 20px;
+	-moz-border-radius: 20px;
+	-ms-border-radius: 20px;
+	-o-border-radius: 20px;
+	border-radius: 20px;
+	*width: 550px;
+	*z-index: 2
+}

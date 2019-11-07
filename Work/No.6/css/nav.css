@@ -1,30 +1,26 @@
 .qq-nav {
-	padding-bottom: 30px
+	padding-bottom: 30px;
+	width: 1000px;
+	height: 65px;
+	margin: auto;
 }
 
 .qq-nav .nav-mod {
 	position: relative;
-	height: 50px;
 	padding-left: 20px;
 	background-color: #1479d7;
-}
-
-.qq-nav .nav-mod .nav-item {
-	white-space: nowrap;
-	display: inline-block;
-	width: 230px;
-	text-align: center
-}
-.qq-nav .nav-mod .nav-item:hover {
-	color: #14539a;
-	background-color: #cbe1ed
+	height: 45px;
+	font-size: 16px;
+	padding-left: 9px
 }
 
 .qq-nav .nav-mod .nav-main {
-	line-height: 50px
+	line-height: 44px
 }
 
 .qq-nav .nav-mod .nav-main a {
+	padding-top: 15px;
+	padding-bottom: 15px;
 	text-decoration: none;
 	padding: 4px 5px;
 	color: #FFF
@@ -35,17 +31,14 @@
 	background-color: #cbe1ed
 }
 
-
-
-
-.qq-nav .nav-mod {
-	height: 45px;
-	font-size: 16px;
-	padding-left: 9px
+.qq-nav .nav-mod .nav-item {
+	white-space: nowrap;
+	display: inline-block;
+	width: 230px;
+	text-align: center
 }
 
-.qq-nav .nav-mod .nav-main {
-	line-height: 44px
+.qq-nav .nav-mod .nav-item:hover {
+	color: #14539a;
+	background-color: #cbe1ed
 }
-
-

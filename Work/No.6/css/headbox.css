@@ -1,3 +1,9 @@
+.headbox {
+	width: 1000px;
+	height: 70px;
+	margin: auto
+}
+
 .qq-top .top-logo {
 	width: 131px;
 	height: 37px;
@@ -5,13 +11,13 @@
 }
 
 .qq-top .top-logo {
-		margin: 18px 0 0
+	margin: 18px 0 0
 }
 
 .fr {
 	float: right
 }
-	
+
 .top-search .searchMenu {
 	position: relative;
 	width: 68px;
@@ -48,9 +54,7 @@
 }
 
 .top-search .searchMenu .searchTab li.selected,
-.top-search .searchMenu .searchTab li:hover {
-	
-}
+.top-search .searchMenu .searchTab li:hover {}
 
 .top-search input {
 	float: left;

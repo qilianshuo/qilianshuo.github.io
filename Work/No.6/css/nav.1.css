@@ -5,18 +5,20 @@
 	margin: auto;
 }
 
-.nav-mod {
+.qq-nav .nav-mod {
 	position: relative;
+	padding-left: 20px;
 	background-color: #1479d7;
 	height: 45px;
 	font-size: 16px;
+	padding-left: 9px
 }
 
-.nav-mod .nav-main {
+.qq-nav .nav-mod .nav-main {
 	line-height: 44px
 }
 
-.nav-mod .nav-main a {
+.qq-nav .nav-mod .nav-main a {
 	padding-top: 15px;
 	padding-bottom: 15px;
 	text-decoration: none;
@@ -24,19 +26,19 @@
 	color: #FFF
 }
 
-.nav-mod .nav-main a:hover {
+.qq-nav .nav-mod .nav-main a:hover {
 	color: #14539a;
 	background-color: #cbe1ed
 }
 
-.nav-mod .nav-item {
+.qq-nav .nav-mod .nav-item {
 	white-space: nowrap;
 	display: inline-block;
 	width: 230px;
 	text-align: center
 }
 
-.nav-mod .nav-item:hover {
+.qq-nav .nav-mod .nav-item:hover {
 	color: #14539a;
 	background-color: #cbe1ed
 }

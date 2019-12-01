@@ -1,0 +1,275 @@
+.divtop1 {
+				width: 300px;
+				height: 70px;
+				float: left;
+			}
+
+			.divtop2 {
+				width: 800px;
+				height: 70px;
+				float: left;
+				margin-left: 100px;
+			}
+
+			.divtop2 input {
+				width: 680px;
+				height: 40px;
+				font-size: xx-large;
+				border-color: #FF0000;
+				text-align: center;
+				margin-top: 20px;
+				border-width: 5px;
+			}
+
+			.divtop2 button {
+				width: 100px;
+				height: 40px;
+				border-color: #FF0000;
+				background-color: red;
+				text-align: center;
+				color: white;
+				font-size: x-large;
+			}
+
+			.divtop2 a {
+				color: #A9A9A9;
+				text-decoration: none;
+			}
+
+			.divtop2 a:hover {
+				color: red;
+			}
+
+			.divtop3 {
+				width: 400px;
+				height: 70px;
+				float: left;
+				margin-left: 100px;
+			}
+
+			.divhead1 {
+				width: 1700px;
+				height: 50px;
+				float: left;
+				margin-top: 20px;
+			}
+
+			.divhead1 a {
+				text-align: center;
+				color: black;
+				font-size: x-large;
+				margin-left: 20px;
+			}
+
+			.divhead1 a:hover {
+				color: red;
+			}
+
+			.divhead1 p {
+				float: right;
+				font-size: larger;
+				color: #A9A9A9;
+				text-align: center;
+			}
+
+			.divhead2 {
+				width: 1700px;
+				height: 150px;
+				float: left;
+				margin-top: 20px;
+			}
+
+			.divhead3 {
+				width: 1700px;
+				height: 50px;
+				float: left;
+				margin-top: 10px;
+			}
+
+			.divhead4 {
+				width: 1700px;
+				height: 50px;
+				background-color: fuchsia;
+				float: left;
+			}
+
+			.div1 {
+				width: 300px;
+				height: 500px;
+				float: left;
+			}
+
+			.div1 hover {
+				border-style: solid;
+				border-width: 5px;
+				border-color: red;
+			}
+
+			.div1 img {
+				cursor: pointer;
+				transition: all 0.6s;
+			}
+
+			.div1 img:hover {
+				transform: scale(1.3)
+			}
+
+			.div1 hover {
+
+				border: 3px solid red;
+			}
+
+			.div2 {
+				width: 300px;
+				height: 500px;
+				float: left;
+				margin-left: 50px;
+				display: inline;
+			}
+
+			.div2 img {
+				cursor: pointer;
+				transition: all 0.6s;
+			}
+
+			.div2 img:hover {
+				transform: scale(1.3)
+			}
+
+			.div3 {
+				width: 300px;
+				height: 500px;
+				float: left;
+				margin-left: 50px;
+			}
+
+			.div3 img {
+				cursor: pointer;
+				transition: all 0.6s;
+			}
+
+			.div3 img:hover {
+				transform: scale(1.3)
+			}
+
+			.div4 {
+				width: 300px;
+				height: 500px;
+				float: left;
+				margin-left: 50px;
+			}
+
+			.div4 img {
+				cursor: pointer;
+				transition: all 0.6s;
+			}
+
+			.div4 img:hover {
+				transform: scale(1.3)
+			}
+
+			.div5 {
+				width: 300px;
+				height: 500px;
+				float: left;
+				margin-left: 50px;
+			}
+
+			.div5 img {
+				cursor: pointer;
+				transition: all 0.6s;
+			}
+
+			.div5 img:hover {
+				transform: scale(1.3)
+			}
+
+			.div6 {
+				width: 300px;
+				height: 500px;
+				float: left;
+				margin-top: 20px;
+			}
+
+			.div6 img {
+				cursor: pointer;
+				transition: all 0.6s;
+			}
+
+			.div6 img:hover {
+				transform: scale(1.3)
+			}
+
+			.div7 {
+				width: 300px;
+				height: 500px;
+				float: left;
+				margin-left: 50px;
+				margin-top: 20px;
+			}
+
+			.div7 img {
+				cursor: pointer;
+				transition: all 0.6s;
+			}
+
+			.div7 img:hover {
+				transform: scale(1.3)
+			}
+
+			.div8 {
+				width: 300px;
+				height: 500px;
+				float: left;
+				margin-left: 50px;
+				margin-top: 20px;
+			}
+
+			.div8 img {
+				cursor: pointer;
+				transition: all 0.6s;
+			}
+
+			.div8 img:hover {
+				transform: scale(1.3)
+			}
+
+			.div9 {
+				width: 300px;
+				height: 500px;
+				float: left;
+				margin-left: 50px;
+				margin-top: 20px;
+			}
+
+			.div9 img {
+				cursor: pointer;
+				transition: all 0.6s;
+			}
+
+			.div9 img:hover {
+				transform: scale(1.3)
+			}
+
+			.div10 {
+				width: 300px;
+				height: 500px;
+				float: left;
+				margin-left: 50px;
+				margin-top: 20px;
+			}
+
+			.div10 img {
+				cursor: pointer;
+				transition: all 0.6s;
+			}
+
+			.div10 img:hover {
+				transform: scale(1.3)
+			}
+
+			p {
+				color: red;
+				width: 300px;
+				font-size: xx-large;
+			}

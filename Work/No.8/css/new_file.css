@@ -1,0 +1,15 @@
+table{
+	margin-top: 50px;
+	border-collapse: collapse;
+	text-align: center;
+}
+td{
+	width: 100px;
+}
+input{
+	outline: none;
+}
+a{
+	font-family: "宋体";
+	text-decoration: none;
+}

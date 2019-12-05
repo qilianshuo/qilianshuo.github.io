@@ -16,4 +16,12 @@ a{
 	font-family: "宋体";
 	text-decoration: none;
 }
-
+.leftlogo{
+	position: relative;
+	min-height: 1px;
+	padding-right: 15px;
+	padding-left: 15px;
+	float: left;
+	width: 16.66666667%;
+	
+}

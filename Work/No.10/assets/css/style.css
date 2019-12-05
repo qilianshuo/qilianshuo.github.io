@@ -197,14 +197,7 @@ body {
     border: none
 }
 
-.smoothie,
-.smoothie:hover {
-    -webkit-transition: all .5s ease-in-out;
-    -moz-transition: all .5s ease-in-out;
-    -o-transition: all .5s ease-in-out;
-    -ms-transition: all .5s ease-in-out;
-    transition: all .5s ease-in-out
-}
+
 
 .col-md-5th {
     width: 20%

@@ -15,6 +15,7 @@ function add() {
 		"</a></td>" +
 		"</tr>";
 	count++;
+	alert("添加成功!");
 }
 
 function delet(count) {

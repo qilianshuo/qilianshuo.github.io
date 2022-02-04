@@ -30,6 +30,46 @@
       </tags>
   </entry>
   <entry>
+    <title>Mac安装Reids并配置</title>
+    <url>/2022/02/04/Mac%E5%AE%89%E8%A3%85Reids%E5%B9%B6%E9%85%8D%E7%BD%AE/</url>
+    <content><![CDATA[<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><ul>
+<li>使用<code>Homebrew</code>安装</li>
+</ul>
+<p>安装命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">brew install redis</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">==&gt; Downloading https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles/redis-6.2.6.monte</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">####################################################################### 100.0%</span></span></span><br><span class="line">==&gt; Pouring redis-6.2.6.monterey.bottle.tar.gz</span><br><span class="line">==&gt; Caveats</span><br><span class="line">To restart redis after an upgrade:</span><br><span class="line">  brew services restart redis</span><br><span class="line">Or, if you don&#x27;t want/need a background service you can just run:</span><br><span class="line">  /usr/local/opt/redis/bin/redis-server /usr/local/etc/redis.conf</span><br><span class="line">==&gt; Summary</span><br><span class="line">🍺  /usr/local/Cellar/redis/6.2.6: 14 files, 2.0MB</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>下载bin文件并配置环境变量</li>
+</ul>
+<blockquote>
+<p>日后更新(&#x2F;&#x2F;&#x2F;▽&#x2F;&#x2F;&#x2F;)</p>
+</blockquote>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>配置文件路径：</p>
+<p><code>/usr/local/opt/redis/bin/redis-server</code>、</p>
+<p><code>/usr/local/etc/redis.conf</code>。</p>
+<p>More content waiting for update……</p>
+<h2 id="维护"><a href="#维护" class="headerlink" title="维护"></a>维护</h2><ul>
+<li>查看redis进程</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ps axu | grep redis</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>启动、关闭redis服务</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">brew services start redis</span><br><span class="line">brew services stop redis</span><br><span class="line">brew services restart redis</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>……</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>Redis</tag>
+        <tag>数据库</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Hello World</title>
     <url>/2022/02/04/hello-world/</url>
     <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>

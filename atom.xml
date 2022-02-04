@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2022-02-04T08:49:48.864Z</updated>
+  <updated>2022-02-04T14:11:06.745Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Mac安装Reids并配置</title>
+    <link href="http://example.com/2022/02/04/Mac%E5%AE%89%E8%A3%85Reids%E5%B9%B6%E9%85%8D%E7%BD%AE/"/>
+    <id>http://example.com/2022/02/04/Mac%E5%AE%89%E8%A3%85Reids%E5%B9%B6%E9%85%8D%E7%BD%AE/</id>
+    <published>2022-02-04T13:43:24.000Z</published>
+    <updated>2022-02-04T14:11:06.745Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><ul><li>使用<code>Homebrew</code>安装</li></ul><p>安装命令：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install redis</span><br></pre></td></tr></table></figure><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">==&gt; Downloading https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles/redis-6.2.6.monte</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">####################################################################### 100.0%</span></span></span><br><span class="line">==&gt; Pouring redis-6.2.6.monterey.bottle.tar.gz</span><br><span class="line">==&gt; Caveats</span><br><span class="line">To restart redis after an upgrade:</span><br><span class="line">  brew services restart redis</span><br><span class="line">Or, if you don&#x27;t want/need a background service you can just run:</span><br><span class="line">  /usr/local/opt/redis/bin/redis-server /usr/local/etc/redis.conf</span><br><span class="line">==&gt; Summary</span><br><span class="line">🍺  /usr/local/Cellar/redis/6.2.6: 14 files, 2.0MB</span><br></pre></td></tr></table></figure><ul><li>下载bin文件并配置环境变量</li></ul><blockquote><p>日后更新(&#x2F;&#x2F;&#x2F;▽&#x2F;&#x2F;&#x2F;)</p></blockquote><h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>配置文件路径：</p><p><code>/usr/local/opt/redis/bin/redis-server</code>、</p><p><code>/usr/local/etc/redis.conf</code>。</p><p>More content waiting for update……</p><h2 id="维护"><a href="#维护" class="headerlink" title="维护"></a>维护</h2><ul><li>查看redis进程</li></ul><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps axu | grep redis</span><br></pre></td></tr></table></figure><ul><li>启动、关闭redis服务</li></ul><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">brew services start redis</span><br><span class="line">brew services stop redis</span><br><span class="line">brew services restart redis</span><br></pre></td></tr></table></figure><ul><li>……</li></ul>]]></content>
+    
+    
+    <summary type="html">&lt;h2 id=&quot;安装&quot;&gt;&lt;a href=&quot;#安装&quot; class=&quot;headerlink&quot; title=&quot;安装&quot;&gt;&lt;/a&gt;安装&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;使用&lt;code&gt;Homebrew&lt;/code&gt;安装&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;安装命令：&lt;/p&gt;
+&lt;figure class=&quot;highlight shell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;brew install redis&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight shell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;==&amp;gt; Downloading https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles/redis-6.2.6.monte&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;bash&quot;&gt;&lt;span class=&quot;comment&quot;&gt;####################################################################### 100.0%&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;==&amp;gt; Pouring redis-6.2.6.monterey.bottle.tar.gz&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;==&amp;gt; Caveats&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;To restart redis after an upgrade:&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  brew services restart redis&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;Or, if you don&amp;#x27;t want/need a background service you can just run:&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  /usr/local/opt/redis/bin/redis-server /usr/local/etc/redis.conf&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;==&amp;gt; Summary&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;🍺  /usr/local/Cellar/redis/6.2.6: 14 files, 2.0MB&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;</summary>
+    
+    
+    
+    
+    <category term="Redis" scheme="http://example.com/tags/Redis/"/>
+    
+    <category term="数据库" scheme="http://example.com/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+  </entry>
   
   <entry>
     <title>GitHub删除所有提交历史</title>

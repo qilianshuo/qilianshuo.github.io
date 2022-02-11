@@ -28,10 +28,10 @@
 <meta property="og:description" content="安装Redis模块Python无内置redis工具，需先安装redis模块： 1pip3 install redis    连接数据库12345import redisr &#x3D; redis.StrictRedis(host&#x3D;&amp;#x27;localhost&amp;#x27;, port&#x3D;6379, decode_responses&#x3D;True)r.set(&amp;#x27;name&amp;#x27;, &amp;#x27;Lih">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-02-06T08:42:53.000Z">
-<meta property="article:modified_time" content="2022-02-06T11:40:18.843Z">
+<meta property="article:modified_time" content="2022-02-11T02:53:07.379Z">
 <meta property="article:author" content="Mirage">
-<meta property="article:tag" content="redis">
 <meta property="article:tag" content="数据库">
+<meta property="article:tag" content="redis">
 <meta property="article:tag" content="Python">
 <meta name="twitter:card" content="summary">
 
@@ -56,7 +56,7 @@
     var _hmt = _hmt || [];
     (function() {
       var hm = document.createElement("script");
-      hm.src = "https://hm.baidu.com/hm.js?b3fb6c466ba80986273735c69b928818";
+      hm.src = "https://hm.baidu.com/hm.js?a046ffda7fbc3077469517d577c849db";
       var s = document.getElementsByTagName("script")[0];
       s.parentNode.insertBefore(hm, s);
     })();
@@ -229,10 +229,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-02-06 16:42:53 / 修改时间：19:40:18" itemprop="dateCreated datePublished" datetime="2022-02-06T16:42:53+08:00">2022-02-06</time>
+              <time title="创建时间：2022-02-06 16:42:53" itemprop="dateCreated datePublished" datetime="2022-02-06T16:42:53+08:00">2022-02-06</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-11 10:53:07" itemprop="dateModified" datetime="2022-02-11T10:53:07+08:00">2022-02-11</time>
+              </span>
 
           <br>
             <span class="post-meta-item" title="本文字数">
@@ -240,7 +246,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>658</span>
+              <span>710</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -272,7 +278,10 @@
 <p>默认，每个Redis实例都会维护一个自己的连接池。可以直接建立一个连接池，然后作为参数 Redis，这样就可以实现多个 Redis 实例共享一个连接池。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> redis</span><br><span class="line">pool = redis.ConnectionPool(host=<span class="string">&#x27;localhost&#x27;</span>, port=<span class="number">6379</span>, decode_responses=<span class="literal">True</span>)</span><br><span class="line">r = redis.Redis(connection_pool=pool)</span><br></pre></td></tr></table></figure>
 
-
+<h2 id="String操作"><a href="#String操作" class="headerlink" title="String操作"></a>String操作</h2><p>TODO……</p>
+<h2 id="List操作"><a href="#List操作" class="headerlink" title="List操作"></a>List操作</h2><p>TODO……</p>
+<h2 id="Set操作……"><a href="#Set操作……" class="headerlink" title="Set操作……"></a>Set操作……</h2><p>TODO……</p>
+<h2 id="常用操作"><a href="#常用操作" class="headerlink" title="常用操作"></a>常用操作</h2><h3 id="遍历全部key"><a href="#遍历全部key" class="headerlink" title="遍历全部key"></a>遍历全部key</h3><h3 id="……"><a href="#……" class="headerlink" title="……"></a>……</h3>
     </div>
 
     
@@ -301,8 +310,8 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/redis/" rel="tag"><i class="fa fa-tag"></i> redis</a>
               <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag"><i class="fa fa-tag"></i> 数据库</a>
+              <a href="/tags/redis/" rel="tag"><i class="fa fa-tag"></i> redis</a>
               <a href="/tags/Python/" rel="tag"><i class="fa fa-tag"></i> Python</a>
           </div>
 
@@ -377,7 +386,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Redis%E6%A8%A1%E5%9D%97"><span class="nav-number">1.</span> <span class="nav-text">安装Redis模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">2.</span> <span class="nav-text">连接数据库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E6%B1%A0"><span class="nav-number">3.</span> <span class="nav-text">连接池</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Redis%E6%A8%A1%E5%9D%97"><span class="nav-number">1.</span> <span class="nav-text">安装Redis模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">2.</span> <span class="nav-text">连接数据库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E6%B1%A0"><span class="nav-number">3.</span> <span class="nav-text">连接池</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#String%E6%93%8D%E4%BD%9C"><span class="nav-number">4.</span> <span class="nav-text">String操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#List%E6%93%8D%E4%BD%9C"><span class="nav-number">5.</span> <span class="nav-text">List操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Set%E6%93%8D%E4%BD%9C%E2%80%A6%E2%80%A6"><span class="nav-number">6.</span> <span class="nav-text">Set操作……</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C"><span class="nav-number">7.</span> <span class="nav-text">常用操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%8D%E5%8E%86%E5%85%A8%E9%83%A8key"><span class="nav-number">7.1.</span> <span class="nav-text">遍历全部key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%80%A6%E2%80%A6"><span class="nav-number">7.2.</span> <span class="nav-text">……</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 

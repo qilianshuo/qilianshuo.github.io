@@ -1,28 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Flask跨域方案</title>
-    <url>/2022/02/08/Flask%E8%B7%A8%E5%9F%9F%E6%96%B9%E6%A1%88/</url>
-    <content><![CDATA[<blockquote>
-<p>很容易搜索到多种解决方法，暂先记录几种最简单的。</p>
-</blockquote>
-<h3 id="为response添加headers"><a href="#为response添加headers" class="headerlink" title="为response添加headers"></a>为response添加headers</h3><ol>
-<li>使用make_response先创建响应，再给响应添加headers</li>
+    <title>GitHub删除所有提交历史</title>
+    <url>/2022/02/04/GitHub%E5%88%A0%E9%99%A4%E6%89%80%E6%9C%89%E6%8F%90%E4%BA%A4%E5%8E%86%E5%8F%B2/</url>
+    <content><![CDATA[<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p>将代码保持在当前状态，清空commit history。</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>创建新分支 <code>-&gt;</code> 将文件添加到新分支 <code>-&gt;</code> 提交更改 <code>-&gt;</code> 删除旧master分支 <code>-&gt;</code> 重命名新分支 <code>-&gt;</code> 强制更新仓库</p>
+<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><ol>
+<li><p>创建新分支</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git checkout --orphan latest_branch</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将文件添加到新分支</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git add -A</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>提交更改</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git commit -am &quot;Init new branch&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>删除旧master分支</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git branch -D master</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重命名新分支</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git branch -m master</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>强制更新仓库</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git push -f origin master</span><br></pre></td></tr></table></figure></li>
 </ol>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span>():</span></span><br><span class="line">    rsp = make_response(<span class="string">&#x27;Hello world.&#x27;</span>)</span><br><span class="line">    rsp.headers[<span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>] = <span class="string">&#x27;*&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> rsp</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>return响应三元组(response, status, headers)</li>
-</ol>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span>():</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;Hello world&#x27;</span>, <span class="number">200</span>, &#123;<span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>:<span class="string">&#x27;*&#x27;</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="注册请求回调添加headers"><a href="#注册请求回调添加headers" class="headerlink" title="注册请求回调添加headers"></a>注册请求回调添加headers</h3><p>当大量路由都需要允许跨域时，为每个路由逐个添加变得非常麻烦且不易维护。这时可以使用Flask提供的回调接口为请求注册回调，自动添加<code>Access-Control-Allow-Origin</code>的header。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@app.after_request</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">headers_hook</span>(<span class="params">response</span>):</span></span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">&#x27;GET&#x27;</span>:</span><br><span class="line">        response.headers[<span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>] = <span class="string">&#x27;*&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> response</span><br><span class="line"><span class="comment"># 同样可以将app替换为蓝图在局部开启跨域</span></span><br></pre></td></tr></table></figure>
-
 ]]></content>
       <tags>
-        <tag>Flask</tag>
-        <tag>跨域</tag>
+        <tag>git</tag>
       </tags>
   </entry>
   <entry>
@@ -34,7 +38,7 @@
 <p><img src="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/image-20220212220614649.png" alt="image-20220212220614649"></p>
 <p>HttpCanary只有在安装完证书后才能导出pem密钥，这也导致其在Android11上无法使用。</p>
 <p>目前的解决办法通常是从软件的缓存目录中提取出CA证书然后在设置中安装，但需要root权限才能访问<code>/data</code>目录。</p>
-<p>最近发现了针对证书问题的修改版，hook证书安装验证函数，使软件得到的数据始终为已安装证书，这样就可以导出证书去设置里安装。搬运<a href="https://gitee.com/qilianshuo/gitee-file-share/raw/master/apk/HttpCanary_3.3.6.apk">文件下载地址</a>。</p>
+<p>最近发现了针对证书问题的修改版，hook证书安装验证函数，使软件得到的数据始终为已安装证书，这样就可以导出证书去设置里安装。搬运<a href="https://pan.baidu.com/s/1ojhzlOYAXKNxas22leXb1w?pwd=7q5f">文件下载地址</a>。</p>
 <p>⚠️注：</p>
 <ul>
 <li><p>证书导出方法：</p>
@@ -130,32 +134,28 @@
       </tags>
   </entry>
   <entry>
-    <title>GitHub删除所有提交历史</title>
-    <url>/2022/02/04/GitHub%E5%88%A0%E9%99%A4%E6%89%80%E6%9C%89%E6%8F%90%E4%BA%A4%E5%8E%86%E5%8F%B2/</url>
-    <content><![CDATA[<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p>将代码保持在当前状态，清空commit history。</p>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>创建新分支 <code>-&gt;</code> 将文件添加到新分支 <code>-&gt;</code> 提交更改 <code>-&gt;</code> 删除旧master分支 <code>-&gt;</code> 重命名新分支 <code>-&gt;</code> 强制更新仓库</p>
-<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><ol>
-<li><p>创建新分支</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git checkout --orphan latest_branch</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>将文件添加到新分支</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git add -A</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>提交更改</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git commit -am &quot;Init new branch&quot;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>删除旧master分支</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git branch -D master</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>重命名新分支</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git branch -m master</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>强制更新仓库</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git push -f origin master</span><br></pre></td></tr></table></figure></li>
+    <title>Flask跨域方案</title>
+    <url>/2022/02/08/Flask%E8%B7%A8%E5%9F%9F%E6%96%B9%E6%A1%88/</url>
+    <content><![CDATA[<blockquote>
+<p>很容易搜索到多种解决方法，暂先记录几种最简单的。</p>
+</blockquote>
+<h3 id="为response添加headers"><a href="#为response添加headers" class="headerlink" title="为response添加headers"></a>为response添加headers</h3><ol>
+<li>使用make_response先创建响应，再给响应添加headers</li>
 </ol>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span>():</span></span><br><span class="line">    rsp = make_response(<span class="string">&#x27;Hello world.&#x27;</span>)</span><br><span class="line">    rsp.headers[<span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>] = <span class="string">&#x27;*&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> rsp</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>return响应三元组(response, status, headers)</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span>():</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;Hello world&#x27;</span>, <span class="number">200</span>, &#123;<span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>:<span class="string">&#x27;*&#x27;</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="注册请求回调添加headers"><a href="#注册请求回调添加headers" class="headerlink" title="注册请求回调添加headers"></a>注册请求回调添加headers</h3><p>当大量路由都需要允许跨域时，为每个路由逐个添加变得非常麻烦且不易维护。这时可以使用Flask提供的回调接口为请求注册回调，自动添加<code>Access-Control-Allow-Origin</code>的header。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@app.after_request</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">headers_hook</span>(<span class="params">response</span>):</span></span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">&#x27;GET&#x27;</span>:</span><br><span class="line">        response.headers[<span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>] = <span class="string">&#x27;*&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> response</span><br><span class="line"><span class="comment"># 同样可以将app替换为蓝图在局部开启跨域</span></span><br></pre></td></tr></table></figure>
+
 ]]></content>
       <tags>
-        <tag>git</tag>
+        <tag>Flask</tag>
+        <tag>跨域</tag>
       </tags>
   </entry>
   <entry>

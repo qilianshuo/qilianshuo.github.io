@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2022-02-12T14:14:13.707Z</updated>
+  <updated>2022-02-12T14:20:58.662Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -21,9 +21,9 @@
     <link href="http://example.com/2022/02/12/Android11%E4%BD%BF%E7%94%A8HttpCanary/"/>
     <id>http://example.com/2022/02/12/Android11%E4%BD%BF%E7%94%A8HttpCanary/</id>
     <published>2022-02-12T13:55:22.000Z</published>
-    <updated>2022-02-12T14:14:13.707Z</updated>
+    <updated>2022-02-12T14:20:58.662Z</updated>
     
-    <content type="html"><![CDATA[<blockquote><p>Android11更改了CA证书安装机制，为保证安全关闭了第三方应用安装证书的接口，只能通过系统设置安装证书。</p></blockquote><p><img src="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/image-20220212220614649.png" alt="image-20220212220614649"></p><p>HttpCanary只有在安装完证书后才能导出pem密钥，这也导致其在Android11上无法使用。</p><p>目前的解决办法通常是从软件的缓存目录中提取出CA证书然后在设置中安装，但需要root权限才能访问<code>/data</code>目录。</p><p>最近发现了针对证书问题的修改版，hook证书安装验证函数，使软件得到的数据始终为已安装证书，这样就可以导出证书去设置里安装。搬运<a href="https://gitee.com/qilianshuo/gitee-file-share/raw/master/apk/HttpCanary_3.3.6.apk">文件下载地址</a>。</p><p>⚠️注：</p><ul><li><p>证书导出方法：</p><p><code>设置</code> -&gt; <code>HttpCanary根证书</code> -&gt; <code>导出HttpCanary根证书</code> -&gt; <code>Privacy Enhanced Mai(.pem)</code></p><p>导出位置为<code>~/HttpCanary/certs</code></p></li><li><p>设置中安装证书</p><p>不同品牌手机存在差异，通常在<code>安全</code>分类中，或直接在设置中搜索<code>安装证书</code>、<code>CA证书</code>等关键字。</p></li></ul>]]></content>
+    <content type="html"><![CDATA[<blockquote><p>Android11更改了CA证书安装机制，为保证安全关闭了第三方应用安装证书的接口，只能通过系统设置安装证书。</p></blockquote><p><img src="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/image-20220212220614649.png" alt="image-20220212220614649"></p><p>HttpCanary只有在安装完证书后才能导出pem密钥，这也导致其在Android11上无法使用。</p><p>目前的解决办法通常是从软件的缓存目录中提取出CA证书然后在设置中安装，但需要root权限才能访问<code>/data</code>目录。</p><p>最近发现了针对证书问题的修改版，hook证书安装验证函数，使软件得到的数据始终为已安装证书，这样就可以导出证书去设置里安装。搬运<a href="https://pan.baidu.com/s/1ojhzlOYAXKNxas22leXb1w?pwd=7q5f">文件下载地址</a>。</p><p>⚠️注：</p><ul><li><p>证书导出方法：</p><p><code>设置</code> -&gt; <code>HttpCanary根证书</code> -&gt; <code>导出HttpCanary根证书</code> -&gt; <code>Privacy Enhanced Mai(.pem)</code></p><p>导出位置为<code>~/HttpCanary/certs</code></p></li><li><p>设置中安装证书</p><p>不同品牌手机存在差异，通常在<code>安全</code>分类中，或直接在设置中搜索<code>安装证书</code>、<code>CA证书</code>等关键字。</p></li></ul>]]></content>
     
     
     <summary type="html">&lt;blockquote&gt;
@@ -32,7 +32,7 @@
 &lt;p&gt;&lt;img src=&quot;https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/image-20220212220614649.png&quot; alt=&quot;image-20220212220614649&quot;&gt;&lt;/p&gt;
 &lt;p&gt;HttpCanary只有在安装完证书后才能导出pem密钥，这也导致其在Android11上无法使用。&lt;/p&gt;
 &lt;p&gt;目前的解决办法通常是从软件的缓存目录中提取出CA证书然后在设置中安装，但需要root权限才能访问&lt;code&gt;/data&lt;/code&gt;目录。&lt;/p&gt;
-&lt;p&gt;最近发现了针对证书问题的修改版，hook证书安装验证函数，使软件得到的数据始终为已安装证书，这样就可以导出证书去设置里安装。搬运&lt;a href=&quot;https://gitee.com/qilianshuo/gitee-file-share/raw/master/apk/HttpCanary_3.3.6.apk&quot;&gt;文件下载地址&lt;/a&gt;。&lt;/p&gt;</summary>
+&lt;p&gt;最近发现了针对证书问题的修改版，hook证书安装验证函数，使软件得到的数据始终为已安装证书，这样就可以导出证书去设置里安装。搬运&lt;a href=&quot;https://pan.baidu.com/s/1ojhzlOYAXKNxas22leXb1w?pwd=7q5f&quot;&gt;文件下载地址&lt;/a&gt;。&lt;/p&gt;</summary>
     
     
     

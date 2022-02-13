@@ -1,6 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Android11使用HttpCanary</title>
+    <url>/2022/02/12/Android11%E4%BD%BF%E7%94%A8HttpCanary/</url>
+    <content><![CDATA[<blockquote>
+<p>Android11更改了CA证书安装机制，为保证安全关闭了第三方应用安装证书的接口，只能通过系统设置安装证书。</p>
+</blockquote>
+<p><img src="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/image-20220212220614649.png" alt="image-20220212220614649"></p>
+<p>HttpCanary只有在安装完证书后才能导出pem密钥，这也导致其在Android11上无法使用。</p>
+<p>目前的解决办法通常是从软件的缓存目录中提取出CA证书然后在设置中安装，但需要root权限才能访问<code>/data</code>目录。</p>
+<p>最近发现了针对证书问题的修改版，hook证书安装验证函数，使软件得到的数据始终为已安装证书，这样就可以导出证书去设置里安装。搬运<a href="https://pan.baidu.com/s/1ojhzlOYAXKNxas22leXb1w?pwd=7q5f">文件下载地址</a>。</p>
+<p>⚠️注：</p>
+<ul>
+<li><p>证书导出方法：</p>
+<p><code>设置</code> -&gt; <code>HttpCanary根证书</code> -&gt; <code>导出HttpCanary根证书</code> -&gt; <code>Privacy Enhanced Mai(.pem)</code></p>
+<p>导出位置为<code>~/HttpCanary/certs</code></p>
+</li>
+<li><p>设置中安装证书</p>
+<p>不同品牌手机存在差异，通常在<code>安全</code>分类中，或直接在设置中搜索<code>安装证书</code>、<code>CA证书</code>等关键字。</p>
+</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>抓包</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Flask跨域方案</title>
+    <url>/2022/02/08/Flask%E8%B7%A8%E5%9F%9F%E6%96%B9%E6%A1%88/</url>
+    <content><![CDATA[<blockquote>
+<p>很容易搜索到多种解决方法，暂先记录几种最简单的。</p>
+</blockquote>
+<h3 id="为response添加headers"><a href="#为response添加headers" class="headerlink" title="为response添加headers"></a>为response添加headers</h3><ol>
+<li>使用make_response先创建响应，再给响应添加headers</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span>():</span></span><br><span class="line">    rsp = make_response(<span class="string">&#x27;Hello world.&#x27;</span>)</span><br><span class="line">    rsp.headers[<span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>] = <span class="string">&#x27;*&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> rsp</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>return响应三元组(response, status, headers)</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span>():</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;Hello world&#x27;</span>, <span class="number">200</span>, &#123;<span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>:<span class="string">&#x27;*&#x27;</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="注册请求回调添加headers"><a href="#注册请求回调添加headers" class="headerlink" title="注册请求回调添加headers"></a>注册请求回调添加headers</h3><p>当大量路由都需要允许跨域时，为每个路由逐个添加变得非常麻烦且不易维护。这时可以使用Flask提供的回调接口为请求注册回调，自动添加<code>Access-Control-Allow-Origin</code>的header。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@app.after_request</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">headers_hook</span>(<span class="params">response</span>):</span></span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">&#x27;GET&#x27;</span>:</span><br><span class="line">        response.headers[<span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>] = <span class="string">&#x27;*&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> response</span><br><span class="line"><span class="comment"># 同样可以将app替换为蓝图在局部开启跨域</span></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <tags>
+        <tag>Flask</tag>
+        <tag>跨域</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>GitHub删除所有提交历史</title>
     <url>/2022/02/04/GitHub%E5%88%A0%E9%99%A4%E6%89%80%E6%9C%89%E6%8F%90%E4%BA%A4%E5%8E%86%E5%8F%B2/</url>
     <content><![CDATA[<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p>将代码保持在当前状态，清空commit history。</p>
@@ -27,31 +77,6 @@
 ]]></content>
       <tags>
         <tag>git</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Android11使用HttpCanary</title>
-    <url>/2022/02/12/Android11%E4%BD%BF%E7%94%A8HttpCanary/</url>
-    <content><![CDATA[<blockquote>
-<p>Android11更改了CA证书安装机制，为保证安全关闭了第三方应用安装证书的接口，只能通过系统设置安装证书。</p>
-</blockquote>
-<p><img src="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/image-20220212220614649.png" alt="image-20220212220614649"></p>
-<p>HttpCanary只有在安装完证书后才能导出pem密钥，这也导致其在Android11上无法使用。</p>
-<p>目前的解决办法通常是从软件的缓存目录中提取出CA证书然后在设置中安装，但需要root权限才能访问<code>/data</code>目录。</p>
-<p>最近发现了针对证书问题的修改版，hook证书安装验证函数，使软件得到的数据始终为已安装证书，这样就可以导出证书去设置里安装。搬运<a href="https://pan.baidu.com/s/1ojhzlOYAXKNxas22leXb1w?pwd=7q5f">文件下载地址</a>。</p>
-<p>⚠️注：</p>
-<ul>
-<li><p>证书导出方法：</p>
-<p><code>设置</code> -&gt; <code>HttpCanary根证书</code> -&gt; <code>导出HttpCanary根证书</code> -&gt; <code>Privacy Enhanced Mai(.pem)</code></p>
-<p>导出位置为<code>~/HttpCanary/certs</code></p>
-</li>
-<li><p>设置中安装证书</p>
-<p>不同品牌手机存在差异，通常在<code>安全</code>分类中，或直接在设置中搜索<code>安装证书</code>、<code>CA证书</code>等关键字。</p>
-</li>
-</ul>
-]]></content>
-      <tags>
-        <tag>抓包</tag>
       </tags>
   </entry>
   <entry>
@@ -134,31 +159,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Flask跨域方案</title>
-    <url>/2022/02/08/Flask%E8%B7%A8%E5%9F%9F%E6%96%B9%E6%A1%88/</url>
-    <content><![CDATA[<blockquote>
-<p>很容易搜索到多种解决方法，暂先记录几种最简单的。</p>
-</blockquote>
-<h3 id="为response添加headers"><a href="#为response添加headers" class="headerlink" title="为response添加headers"></a>为response添加headers</h3><ol>
-<li>使用make_response先创建响应，再给响应添加headers</li>
-</ol>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span>():</span></span><br><span class="line">    rsp = make_response(<span class="string">&#x27;Hello world.&#x27;</span>)</span><br><span class="line">    rsp.headers[<span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>] = <span class="string">&#x27;*&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> rsp</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>return响应三元组(response, status, headers)</li>
-</ol>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span>():</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;Hello world&#x27;</span>, <span class="number">200</span>, &#123;<span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>:<span class="string">&#x27;*&#x27;</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="注册请求回调添加headers"><a href="#注册请求回调添加headers" class="headerlink" title="注册请求回调添加headers"></a>注册请求回调添加headers</h3><p>当大量路由都需要允许跨域时，为每个路由逐个添加变得非常麻烦且不易维护。这时可以使用Flask提供的回调接口为请求注册回调，自动添加<code>Access-Control-Allow-Origin</code>的header。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@app.after_request</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">headers_hook</span>(<span class="params">response</span>):</span></span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">&#x27;GET&#x27;</span>:</span><br><span class="line">        response.headers[<span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>] = <span class="string">&#x27;*&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> response</span><br><span class="line"><span class="comment"># 同样可以将app替换为蓝图在局部开启跨域</span></span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <tags>
-        <tag>Flask</tag>
-        <tag>跨域</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Python使用redis</title>
     <url>/2022/02/06/Python%E4%BD%BF%E7%94%A8redis/</url>
     <content><![CDATA[<h2 id="安装Redis模块"><a href="#安装Redis模块" class="headerlink" title="安装Redis模块"></a>安装Redis模块</h2><p>Python无内置redis工具，需先安装redis模块：</p>
@@ -201,5 +201,23 @@
 
 <p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 ]]></content>
+  </entry>
+  <entry>
+    <title>Safari正则兼容问题记录</title>
+    <url>/2022/02/13/Safari%E6%AD%A3%E5%88%99%E5%85%BC%E5%AE%B9%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/</url>
+    <content><![CDATA[<p>Halo某主题代码渲染出现问题，查看控制台发现报错如下：</p>
+<p><img src="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/image-20220213130754875.png" alt="image-20220213130754875"></p>
+<p>定位到错误代码：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> reg = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&quot;(?&lt;=]).+(?=\\[/)&quot;</span>, <span class="string">&quot;g&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> noway = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&quot;(?=\\[noway])(\\S*)(\\[/noway]=?)&quot;</span>, <span class="string">&quot;g&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> buy = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&quot;(?=\\[buy])(\\S*)(\\[/buy]=?)&quot;</span>, <span class="string">&quot;g&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> task = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&quot;(?=\\[task])(\\S*)(\\[/task]=?)&quot;</span>, <span class="string">&quot;g&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> warning = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&quot;(?=\\[warning])(\\S*)(\\[/warning]=?)&quot;</span>, <span class="string">&quot;g&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="错误分析"><a href="#错误分析" class="headerlink" title="错误分析"></a>错误分析</h2><p>根据控制台报错，问题出现在正则匹配式上。尝试在Chrome上运行该行代码，无报错，至此可以肯定是浏览器的兼容性问题。</p>
+<p>经查阅发现Safari不支持零宽断言，即<code>?&lt;=</code>、<code>?=</code>，解决办法是使用其它表达式替换零宽断言。</p>
+]]></content>
+      <tags>
+        <tag>正则</tag>
+        <tag>Safari</tag>
+      </tags>
   </entry>
 </search>

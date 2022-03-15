@@ -220,4 +220,88 @@
         <tag>Safari</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Miller-Rabin素数测试算法.md</title>
+    <url>/2022/03/15/Miller-Rabin%E7%B4%A0%E6%95%B0%E6%B5%8B%E8%AF%95%E7%AE%97%E6%B3%95-md/</url>
+    <content><![CDATA[<blockquote>
+<p>学习RSA过程中用到了大素数，记录学习过程。</p>
+</blockquote>
+<p>目前没有算法能够直接生成一个素数（据本人了解），只能通过不断生成随机数直到产生素数的方法来生成。如果$n$较小，可以直接对$2$到$\sqrt{n}$ 的所有整数取模验证，但当$n$特别大时，$O(\sqrt{n})$ 复杂度耗费的大量时间是不能被接受的。此时如果牺牲部分准确度来换取时间的优化，即为Miller-Rabin算法。</p>
+<p>根据百度百科，使用快速幂运算，这个算法的时间复杂度是 $O(𝑘\log^3𝑛)$ ，判错概率是$4^{-k}$，$k$为判断次数。下面为该算法的实现原理。</p>
+<h2 id="引理"><a href="#引理" class="headerlink" title="引理"></a>引理</h2><h3 id="1-费马小定理"><a href="#1-费马小定理" class="headerlink" title="1. 费马小定理"></a>1. 费马小定理</h3><p>如果$p$是素数，且 $gcd(a, p) &#x3D; 1$ ，则有 $a^{p-1}\equiv 1 \pmod {p}$ 。</p>
+<p>它的逆命题并不能推出$p$为素数，但如果不满足 $a^{p-1} \equiv 1 \pmod {p}$ 的$p$一定是合数。</p>
+<h3 id="2-有限域上的平方根定理"><a href="#2-有限域上的平方根定理" class="headerlink" title="2. 有限域上的平方根定理"></a>2. 有限域上的平方根定理</h3><p>如果$p$是一个奇质数，且 $e \geq 1$ ，则方程 </p>
+<p>$$<br>x^2 \equiv 1 \pmod {p^e}<br>$$</p>
+<p>仅有两个根 $x&#x3D;1$ 或者 $x&#x3D;-1$ ，$\pm1$也称为1的平凡平方根。</p>
+<blockquote>
+<p>在 $e&#x3D;1$ 即模$p$的情况下，$x&#x3D;-1$等价于$x&#x3D;p-1$ 。</p>
+<p>把 $x &#x3D; 1$ 和 $x &#x3D; p-1$ 称为“$x$对模$p$来说1的平凡平方根”不太通顺，Miller-Rabin索性测试用到这个方程：$x^2 \equiv 1 \pmod {n}$ 。如果一个数$x$满足方程$x^2 \equiv 1 \pmod {𝑛}$，但$x$不等于平凡平方根1或$n-1$ ，那么称$x$是对模n来说1的“非平凡”平方根。例如，$x&#x3D;6$ , $n&#x3D;35$ ，6是对模35来说1的非平凡平方根。</p>
+<p>推论：如果对模n存在1的非平凡平方根，则n是合数。</p>
+</blockquote>
+<h2 id="Miller-Rabin算法"><a href="#Miller-Rabin算法" class="headerlink" title="Miller-Rabin算法"></a>Miller-Rabin算法</h2><p>判断一个大数n是否为素数时，可以利用上面的费马小定理 $a^{n-1} \equiv 1 \pmod {n}$ ，如果不满足该式，则可断定n为合数。但在该判断前可以用引理2的推理进一步增强准确性。</p>
+<p>对于偶数$n-1$ ，一定可以拆分为 $n-1 &#x3D; 2 ^ s * d$ ：<br>$$<br>a ^ {n-1} &#x3D; a ^ {2 ^ {s} * d} &#x3D; (((a^d)^2)\cdots)^2<br>$$<br>从$x&#x3D;a^d$开始，依次平方s次，每次平方的时候模n。由有限域上的平方根定理可知，如果模n时结果为1，那么$x$一定是1或者$n-1$，如果不满足则n为合数。如果$x$为1的平凡平方根或模n的结果不为1，$x &#x3D; x^2$继续下一次平方，然后模n判断。</p>
+<p>当平方到了s次，此时$x &#x3D; a ^ {n-1}$ ，判断$x$模n的结果是否为1。如果不为1判定n为合数，如果为1则可认为n大概率为素数。</p>
+<h3 id="算法的代码实现"><a href="#算法的代码实现" class="headerlink" title="算法的代码实现"></a>算法的代码实现</h3><blockquote>
+<p>在进行$a^{d} \pmod n$ 和 $x^2 \pmod n$时如果直接运算，大概率会溢出，所以需要使用快速幂和快速乘。</p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">long</span> <span class="keyword">long</span> ll;</span><br><span class="line"></span><br><span class="line"><span class="function">ll <span class="title">qMul</span><span class="params">(ll a, ll b, ll mod)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function">ll <span class="title">qPow</span><span class="params">(ll base, ll power, ll mod)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Miller_Rabin</span><span class="params">(ll n, <span class="keyword">int</span> repeat)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ll n;</span><br><span class="line">    <span class="keyword">while</span> (<span class="built_in">printf</span>(<span class="string">&quot;Input a n to judge:\n&quot;</span>) &amp;&amp; <span class="built_in">scanf</span>(<span class="string">&quot;%lld&quot;</span>, &amp;n) != EOF) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(Miller_Rabin(n, <span class="number">10</span>) ? <span class="string">&quot;Yes\n\n&quot;</span> : <span class="string">&quot;No\n\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//quick multiply</span></span><br><span class="line"><span class="function">ll <span class="title">qMul</span><span class="params">(ll a, ll b, ll mod)</span> </span>&#123;</span><br><span class="line">    ll ret = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (b) &#123;</span><br><span class="line">        <span class="keyword">if</span> (b &amp; <span class="number">1</span>) ret = (ret + a) % mod;</span><br><span class="line">        a = (a + a) % mod;</span><br><span class="line">        b &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//quick power</span></span><br><span class="line"><span class="function">ll <span class="title">qPow</span><span class="params">(ll base, ll power, ll mod)</span> </span>&#123;</span><br><span class="line">    ll ret = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (power) &#123;</span><br><span class="line">        <span class="keyword">if</span> (power &amp; <span class="number">1</span>) ret = qMul(ret, base, mod);</span><br><span class="line">        base = qMul(base, base, mod);</span><br><span class="line">        power &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ret % mod;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Miller_Rabin</span><span class="params">(ll n, <span class="keyword">int</span> repeat)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (n == <span class="number">2</span> || n == <span class="number">3</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (n % <span class="number">2</span> == <span class="number">0</span> || n == <span class="number">1</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    ll d = n - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> s = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (!(d &amp; <span class="number">1</span>)) ++s, d &gt;&gt;= <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; repeat; i++) &#123;</span><br><span class="line">        ll a = rand() % (n - <span class="number">3</span>) + <span class="number">2</span>;</span><br><span class="line">        ll x = qPow(a, d, n);</span><br><span class="line">        ll y = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; s; j++) &#123;</span><br><span class="line">            y = qMul(x, x, n);</span><br><span class="line">            <span class="keyword">if</span> (y == <span class="number">1</span> &amp;&amp; x != <span class="number">1</span> &amp;&amp; x != (n - <span class="number">1</span>)) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">            x = y;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (y != <span class="number">1</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <tags>
+        <tag>素数</tag>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>RSSI定位算法学习</title>
+    <url>/2022/03/01/RSSI%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/</url>
+    <content><![CDATA[<ul>
+<li>K最近邻居法</li>
+<li>DV-Hop法</li>
+<li>质心定位算法</li>
+<li>加权质心定位算法</li>
+</ul>
+<hr>
+<ul>
+<li>三边定位算法</li>
+<li>AOA定位算法</li>
+<li>TOA&#x2F;TDOA算法</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>RSSI</tag>
+        <tag>定位</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>mac OS快捷键</title>
+    <url>/2022/02/14/mac-OS%E5%BF%AB%E6%8D%B7%E9%94%AE/</url>
+    <content><![CDATA[<blockquote>
+<p>🍀持续更新中～</p>
+</blockquote>
+<h3 id="文稿快捷键"><a href="#文稿快捷键" class="headerlink" title="文稿快捷键"></a>文稿快捷键</h3><p>⌘ + ↑：文稿开头</p>
+<p>⌘ + ↓：文稿末尾</p>
+<p>⌘ + → ：行首（Home）</p>
+<p>⌘ + ← ：行尾（End）</p>
+<p>⌥  + ← ：单词首</p>
+<p>⌥  + →： 单词尾</p>
+<p>⌃ + A：行或段落开头</p>
+<p>⌃ + E：行或段落末尾</p>
+<p>⌃ + F：向前一字符</p>
+<p>⌃ + B：向后一字符</p>
+<p>⌃ + N：下一行</p>
+<p>⌃ + P：上一行</p>
+<h3 id="Mac修饰键样式"><a href="#Mac修饰键样式" class="headerlink" title="Mac修饰键样式"></a>Mac修饰键样式</h3><ul>
+<li>⇪ Caps Lock</li>
+<li>⌘ Command</li>
+<li>⌥ Option</li>
+<li>⇧ Shift</li>
+<li>⌃ Control</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>Mac OS</tag>
+        <tag>快捷键</tag>
+      </tags>
+  </entry>
 </search>

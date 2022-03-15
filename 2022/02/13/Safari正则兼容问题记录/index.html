@@ -264,9 +264,6 @@
 <p><img src="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/image-20220213130754875.png" alt="image-20220213130754875"></p>
 <p>定位到错误代码：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> reg = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&quot;(?&lt;=]).+(?=\\[/)&quot;</span>, <span class="string">&quot;g&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> noway = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&quot;(?=\\[noway])(\\S*)(\\[/noway]=?)&quot;</span>, <span class="string">&quot;g&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> buy = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&quot;(?=\\[buy])(\\S*)(\\[/buy]=?)&quot;</span>, <span class="string">&quot;g&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> task = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&quot;(?=\\[task])(\\S*)(\\[/task]=?)&quot;</span>, <span class="string">&quot;g&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> warning = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&quot;(?=\\[warning])(\\S*)(\\[/warning]=?)&quot;</span>, <span class="string">&quot;g&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-
-
 <h2 id="错误分析"><a href="#错误分析" class="headerlink" title="错误分析"></a>错误分析</h2><p>根据控制台报错，问题出现在正则匹配式上。尝试在Chrome上运行该行代码，无报错，至此可以肯定是浏览器的兼容性问题。</p>
 <p>经查阅发现Safari不支持零宽断言，即<code>?&lt;=</code>、<code>?=</code>，解决办法是使用其它表达式替换零宽断言。</p>
 
@@ -500,6 +497,8 @@
 
 
 
+
+  
 
   
 

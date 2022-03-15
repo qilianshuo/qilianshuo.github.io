@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="安装Redis模块Python无内置redis工具，需先安装redis模块： 1pip3 install redis    连接数据库12345import redisr &#x3D; redis.StrictRedis(host&#x3D;&amp;#x27;localhost&amp;#x27;, port&#x3D;6379, decode_responses&#x3D;True)r.set(&amp;#x27;name&amp;#x27;, &amp;#x27;Lih">
+  <meta name="description" content="安装Redis模块Python无内置redis工具，需先安装redis模块： 1pip3 install redis 连接数据库12345import redisr &#x3D; redis.StrictRedis(host&#x3D;&amp;#x27;localhost&amp;#x27;, port&#x3D;6379, decode_responses&#x3D;True)r.set(&amp;#x27;name&amp;#x27;, &amp;#x27;Lihua&amp;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Python使用redis">
 <meta property="og:url" content="http://example.com/2022/02/06/Python%E4%BD%BF%E7%94%A8redis/index.html">
 <meta property="og:site_name" content="Mirage&#39;s Blog">
-<meta property="og:description" content="安装Redis模块Python无内置redis工具，需先安装redis模块： 1pip3 install redis    连接数据库12345import redisr &#x3D; redis.StrictRedis(host&#x3D;&amp;#x27;localhost&amp;#x27;, port&#x3D;6379, decode_responses&#x3D;True)r.set(&amp;#x27;name&amp;#x27;, &amp;#x27;Lih">
+<meta property="og:description" content="安装Redis模块Python无内置redis工具，需先安装redis模块： 1pip3 install redis 连接数据库12345import redisr &#x3D; redis.StrictRedis(host&#x3D;&amp;#x27;localhost&amp;#x27;, port&#x3D;6379, decode_responses&#x3D;True)r.set(&amp;#x27;name&amp;#x27;, &amp;#x27;Lihua&amp;">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-02-06T08:42:53.000Z">
 <meta property="article:modified_time" content="2022-02-11T02:53:07.379Z">
@@ -246,7 +246,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>710</span>
+              <span>705</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -267,17 +267,12 @@
       
         <h2 id="安装Redis模块"><a href="#安装Redis模块" class="headerlink" title="安装Redis模块"></a>安装Redis模块</h2><p>Python无内置redis工具，需先安装redis模块：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install redis</span><br></pre></td></tr></table></figure>
-
-
-
 <h2 id="连接数据库"><a href="#连接数据库" class="headerlink" title="连接数据库"></a>连接数据库</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> redis</span><br><span class="line">r = redis.StrictRedis(host=<span class="string">&#x27;localhost&#x27;</span>, port=<span class="number">6379</span>, decode_responses=<span class="literal">True</span>)</span><br><span class="line">r.<span class="built_in">set</span>(<span class="string">&#x27;name&#x27;</span>, <span class="string">&#x27;Lihua&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(r[<span class="string">&#x27;name&#x27;</span>])</span><br><span class="line"><span class="built_in">print</span>(r.get(<span class="string">&#x27;name&#x27;</span>)</span><br></pre></td></tr></table></figure>
-
 <p>redis 提供两个类 Redis 和 StrictRedis, StrictRedis 用于实现大部分官方的命令，Redis 是 StrictRedis 的子类，用于向后兼用旧版本。</p>
-<p>redis 取出的结果默认是字节，可以设定 <strong>decode_responses&#x3D;True</strong> 改成字符串。</p>
+<p>redis 取出的结果默认是字节，可以设定 <strong>decode_responses=True</strong> 改成字符串。</p>
 <h2 id="连接池"><a href="#连接池" class="headerlink" title="连接池"></a>连接池</h2><p>redis-py 使用 connection pool 来管理对一个 redis server 的所有连接，避免每次建立、释放连接的开销。</p>
 <p>默认，每个Redis实例都会维护一个自己的连接池。可以直接建立一个连接池，然后作为参数 Redis，这样就可以实现多个 Redis 实例共享一个连接池。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> redis</span><br><span class="line">pool = redis.ConnectionPool(host=<span class="string">&#x27;localhost&#x27;</span>, port=<span class="number">6379</span>, decode_responses=<span class="literal">True</span>)</span><br><span class="line">r = redis.Redis(connection_pool=pool)</span><br></pre></td></tr></table></figure>
-
 <h2 id="String操作"><a href="#String操作" class="headerlink" title="String操作"></a>String操作</h2><p>TODO……</p>
 <h2 id="List操作"><a href="#List操作" class="headerlink" title="List操作"></a>List操作</h2><p>TODO……</p>
 <h2 id="Set操作……"><a href="#Set操作……" class="headerlink" title="Set操作……"></a>Set操作……</h2><p>TODO……</p>
@@ -513,6 +508,8 @@
 
 
 
+
+  
 
   
 

@@ -159,68 +159,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Python使用redis</title>
-    <url>/2022/02/06/Python%E4%BD%BF%E7%94%A8redis/</url>
-    <content><![CDATA[<h2 id="安装Redis模块"><a href="#安装Redis模块" class="headerlink" title="安装Redis模块"></a>安装Redis模块</h2><p>Python无内置redis工具，需先安装redis模块：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">pip3 install redis</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="连接数据库"><a href="#连接数据库" class="headerlink" title="连接数据库"></a>连接数据库</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> redis</span><br><span class="line">r = redis.StrictRedis(host=<span class="string">&#x27;localhost&#x27;</span>, port=<span class="number">6379</span>, decode_responses=<span class="literal">True</span>)</span><br><span class="line">r.<span class="built_in">set</span>(<span class="string">&#x27;name&#x27;</span>, <span class="string">&#x27;Lihua&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(r[<span class="string">&#x27;name&#x27;</span>])</span><br><span class="line"><span class="built_in">print</span>(r.get(<span class="string">&#x27;name&#x27;</span>)</span><br></pre></td></tr></table></figure>
-
-<p>redis 提供两个类 Redis 和 StrictRedis, StrictRedis 用于实现大部分官方的命令，Redis 是 StrictRedis 的子类，用于向后兼用旧版本。</p>
-<p>redis 取出的结果默认是字节，可以设定 <strong>decode_responses&#x3D;True</strong> 改成字符串。</p>
-<h2 id="连接池"><a href="#连接池" class="headerlink" title="连接池"></a>连接池</h2><p>redis-py 使用 connection pool 来管理对一个 redis server 的所有连接，避免每次建立、释放连接的开销。</p>
-<p>默认，每个Redis实例都会维护一个自己的连接池。可以直接建立一个连接池，然后作为参数 Redis，这样就可以实现多个 Redis 实例共享一个连接池。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> redis</span><br><span class="line">pool = redis.ConnectionPool(host=<span class="string">&#x27;localhost&#x27;</span>, port=<span class="number">6379</span>, decode_responses=<span class="literal">True</span>)</span><br><span class="line">r = redis.Redis(connection_pool=pool)</span><br></pre></td></tr></table></figure>
-
-<h2 id="String操作"><a href="#String操作" class="headerlink" title="String操作"></a>String操作</h2><p>TODO……</p>
-<h2 id="List操作"><a href="#List操作" class="headerlink" title="List操作"></a>List操作</h2><p>TODO……</p>
-<h2 id="Set操作……"><a href="#Set操作……" class="headerlink" title="Set操作……"></a>Set操作……</h2><p>TODO……</p>
-<h2 id="常用操作"><a href="#常用操作" class="headerlink" title="常用操作"></a>常用操作</h2><h3 id="遍历全部key"><a href="#遍历全部key" class="headerlink" title="遍历全部key"></a>遍历全部key</h3><h3 id="……"><a href="#……" class="headerlink" title="……"></a>……</h3>]]></content>
-      <tags>
-        <tag>数据库</tag>
-        <tag>redis</tag>
-        <tag>Python</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2022/02/04/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
-  </entry>
-  <entry>
-    <title>Safari正则兼容问题记录</title>
-    <url>/2022/02/13/Safari%E6%AD%A3%E5%88%99%E5%85%BC%E5%AE%B9%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/</url>
-    <content><![CDATA[<p>Halo某主题代码渲染出现问题，查看控制台发现报错如下：</p>
-<p><img src="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/image-20220213130754875.png" alt="image-20220213130754875"></p>
-<p>定位到错误代码：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> reg = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&quot;(?&lt;=]).+(?=\\[/)&quot;</span>, <span class="string">&quot;g&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> noway = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&quot;(?=\\[noway])(\\S*)(\\[/noway]=?)&quot;</span>, <span class="string">&quot;g&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> buy = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&quot;(?=\\[buy])(\\S*)(\\[/buy]=?)&quot;</span>, <span class="string">&quot;g&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> task = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&quot;(?=\\[task])(\\S*)(\\[/task]=?)&quot;</span>, <span class="string">&quot;g&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> warning = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&quot;(?=\\[warning])(\\S*)(\\[/warning]=?)&quot;</span>, <span class="string">&quot;g&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="错误分析"><a href="#错误分析" class="headerlink" title="错误分析"></a>错误分析</h2><p>根据控制台报错，问题出现在正则匹配式上。尝试在Chrome上运行该行代码，无报错，至此可以肯定是浏览器的兼容性问题。</p>
-<p>经查阅发现Safari不支持零宽断言，即<code>?&lt;=</code>、<code>?=</code>，解决办法是使用其它表达式替换零宽断言。</p>
-]]></content>
-      <tags>
-        <tag>正则</tag>
-        <tag>Safari</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Miller-Rabin素数测试算法.md</title>
     <url>/2022/03/15/Miller-Rabin%E7%B4%A0%E6%95%B0%E6%B5%8B%E8%AF%95%E7%AE%97%E6%B3%95-md/</url>
     <content><![CDATA[<blockquote>
@@ -253,6 +191,32 @@
       </tags>
   </entry>
   <entry>
+    <title>Python使用redis</title>
+    <url>/2022/02/06/Python%E4%BD%BF%E7%94%A8redis/</url>
+    <content><![CDATA[<h2 id="安装Redis模块"><a href="#安装Redis模块" class="headerlink" title="安装Redis模块"></a>安装Redis模块</h2><p>Python无内置redis工具，需先安装redis模块：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">pip3 install redis</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="连接数据库"><a href="#连接数据库" class="headerlink" title="连接数据库"></a>连接数据库</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> redis</span><br><span class="line">r = redis.StrictRedis(host=<span class="string">&#x27;localhost&#x27;</span>, port=<span class="number">6379</span>, decode_responses=<span class="literal">True</span>)</span><br><span class="line">r.<span class="built_in">set</span>(<span class="string">&#x27;name&#x27;</span>, <span class="string">&#x27;Lihua&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(r[<span class="string">&#x27;name&#x27;</span>])</span><br><span class="line"><span class="built_in">print</span>(r.get(<span class="string">&#x27;name&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>redis 提供两个类 Redis 和 StrictRedis, StrictRedis 用于实现大部分官方的命令，Redis 是 StrictRedis 的子类，用于向后兼用旧版本。</p>
+<p>redis 取出的结果默认是字节，可以设定 <strong>decode_responses&#x3D;True</strong> 改成字符串。</p>
+<h2 id="连接池"><a href="#连接池" class="headerlink" title="连接池"></a>连接池</h2><p>redis-py 使用 connection pool 来管理对一个 redis server 的所有连接，避免每次建立、释放连接的开销。</p>
+<p>默认，每个Redis实例都会维护一个自己的连接池。可以直接建立一个连接池，然后作为参数 Redis，这样就可以实现多个 Redis 实例共享一个连接池。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> redis</span><br><span class="line">pool = redis.ConnectionPool(host=<span class="string">&#x27;localhost&#x27;</span>, port=<span class="number">6379</span>, decode_responses=<span class="literal">True</span>)</span><br><span class="line">r = redis.Redis(connection_pool=pool)</span><br></pre></td></tr></table></figure>
+
+<h2 id="String操作"><a href="#String操作" class="headerlink" title="String操作"></a>String操作</h2><p>TODO……</p>
+<h2 id="List操作"><a href="#List操作" class="headerlink" title="List操作"></a>List操作</h2><p>TODO……</p>
+<h2 id="Set操作……"><a href="#Set操作……" class="headerlink" title="Set操作……"></a>Set操作……</h2><p>TODO……</p>
+<h2 id="常用操作"><a href="#常用操作" class="headerlink" title="常用操作"></a>常用操作</h2><h3 id="遍历全部key"><a href="#遍历全部key" class="headerlink" title="遍历全部key"></a>遍历全部key</h3><h3 id="……"><a href="#……" class="headerlink" title="……"></a>……</h3>]]></content>
+      <tags>
+        <tag>数据库</tag>
+        <tag>redis</tag>
+        <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>RSSI定位算法学习</title>
     <url>/2022/03/01/RSSI%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/</url>
     <content><![CDATA[<ul>
@@ -272,6 +236,42 @@
         <tag>RSSI</tag>
         <tag>定位</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Safari正则兼容问题记录</title>
+    <url>/2022/02/13/Safari%E6%AD%A3%E5%88%99%E5%85%BC%E5%AE%B9%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/</url>
+    <content><![CDATA[<p>Halo某主题代码渲染出现问题，查看控制台发现报错如下：</p>
+<p><img src="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/image-20220213130754875.png" alt="image-20220213130754875"></p>
+<p>定位到错误代码：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> reg = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&quot;(?&lt;=]).+(?=\\[/)&quot;</span>, <span class="string">&quot;g&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> noway = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&quot;(?=\\[noway])(\\S*)(\\[/noway]=?)&quot;</span>, <span class="string">&quot;g&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> buy = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&quot;(?=\\[buy])(\\S*)(\\[/buy]=?)&quot;</span>, <span class="string">&quot;g&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> task = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&quot;(?=\\[task])(\\S*)(\\[/task]=?)&quot;</span>, <span class="string">&quot;g&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> warning = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&quot;(?=\\[warning])(\\S*)(\\[/warning]=?)&quot;</span>, <span class="string">&quot;g&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="错误分析"><a href="#错误分析" class="headerlink" title="错误分析"></a>错误分析</h2><p>根据控制台报错，问题出现在正则匹配式上。尝试在Chrome上运行该行代码，无报错，至此可以肯定是浏览器的兼容性问题。</p>
+<p>经查阅发现Safari不支持零宽断言，即<code>?&lt;=</code>、<code>?=</code>，解决办法是使用其它表达式替换零宽断言。</p>
+]]></content>
+      <tags>
+        <tag>正则</tag>
+        <tag>Safari</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2022/02/04/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
   </entry>
   <entry>
     <title>mac OS快捷键</title>

@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Flask跨域方案</title>
+    <url>/2022/02/08/Flask%E8%B7%A8%E5%9F%9F%E6%96%B9%E6%A1%88/</url>
+    <content><![CDATA[<blockquote>
+<p>很容易搜索到多种解决方法，暂先记录几种最简单的。</p>
+</blockquote>
+<h3 id="为response添加headers"><a href="#为response添加headers" class="headerlink" title="为response添加headers"></a>为response添加headers</h3><ol>
+<li>使用make_response先创建响应，再给响应添加headers</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span>():</span></span><br><span class="line">    rsp = make_response(<span class="string">&#x27;Hello world.&#x27;</span>)</span><br><span class="line">    rsp.headers[<span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>] = <span class="string">&#x27;*&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> rsp</span><br></pre></td></tr></table></figure>
+<ol>
+<li>return响应三元组(response, status, headers)</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span>():</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;Hello world&#x27;</span>, <span class="number">200</span>, &#123;<span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>:<span class="string">&#x27;*&#x27;</span>&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="注册请求回调添加headers"><a href="#注册请求回调添加headers" class="headerlink" title="注册请求回调添加headers"></a>注册请求回调添加headers</h3><p>当大量路由都需要允许跨域时，为每个路由逐个添加变得非常麻烦且不易维护。这时可以使用Flask提供的回调接口为请求注册回调，自动添加<code>Access-Control-Allow-Origin</code>的header。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@app.after_request</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">headers_hook</span>(<span class="params">response</span>):</span></span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">&#x27;GET&#x27;</span>:</span><br><span class="line">        response.headers[<span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>] = <span class="string">&#x27;*&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> response</span><br><span class="line"><span class="comment"># 同样可以将app替换为蓝图在局部开启跨域</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>Flask</tag>
+        <tag>跨域</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Android11使用HttpCanary</title>
     <url>/2022/02/12/Android11%E4%BD%BF%E7%94%A8HttpCanary/</url>
     <content><![CDATA[<blockquote>
@@ -23,28 +45,6 @@
 ]]></content>
       <tags>
         <tag>抓包</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Flask跨域方案</title>
-    <url>/2022/02/08/Flask%E8%B7%A8%E5%9F%9F%E6%96%B9%E6%A1%88/</url>
-    <content><![CDATA[<blockquote>
-<p>很容易搜索到多种解决方法，暂先记录几种最简单的。</p>
-</blockquote>
-<h3 id="为response添加headers"><a href="#为response添加headers" class="headerlink" title="为response添加headers"></a>为response添加headers</h3><ol>
-<li>使用make_response先创建响应，再给响应添加headers</li>
-</ol>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span>():</span></span><br><span class="line">    rsp = make_response(<span class="string">&#x27;Hello world.&#x27;</span>)</span><br><span class="line">    rsp.headers[<span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>] = <span class="string">&#x27;*&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> rsp</span><br></pre></td></tr></table></figure>
-<ol>
-<li>return响应三元组(response, status, headers)</li>
-</ol>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span>():</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;Hello world&#x27;</span>, <span class="number">200</span>, &#123;<span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>:<span class="string">&#x27;*&#x27;</span>&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="注册请求回调添加headers"><a href="#注册请求回调添加headers" class="headerlink" title="注册请求回调添加headers"></a>注册请求回调添加headers</h3><p>当大量路由都需要允许跨域时，为每个路由逐个添加变得非常麻烦且不易维护。这时可以使用Flask提供的回调接口为请求注册回调，自动添加<code>Access-Control-Allow-Origin</code>的header。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@app.after_request</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">headers_hook</span>(<span class="params">response</span>):</span></span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">&#x27;GET&#x27;</span>:</span><br><span class="line">        response.headers[<span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>] = <span class="string">&#x27;*&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> response</span><br><span class="line"><span class="comment"># 同样可以将app替换为蓝图在局部开启跨域</span></span><br></pre></td></tr></table></figure>
-]]></content>
-      <tags>
-        <tag>Flask</tag>
-        <tag>跨域</tag>
       </tags>
   </entry>
   <entry>
@@ -157,6 +157,27 @@
       </tags>
   </entry>
   <entry>
+    <title>Python使用redis</title>
+    <url>/2022/02/06/Python%E4%BD%BF%E7%94%A8redis/</url>
+    <content><![CDATA[<h2 id="安装Redis模块"><a href="#安装Redis模块" class="headerlink" title="安装Redis模块"></a>安装Redis模块</h2><p>Python无内置redis工具，需先安装redis模块：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">pip3 install redis</span><br></pre></td></tr></table></figure>
+<h2 id="连接数据库"><a href="#连接数据库" class="headerlink" title="连接数据库"></a>连接数据库</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> redis</span><br><span class="line">r = redis.StrictRedis(host=<span class="string">&#x27;localhost&#x27;</span>, port=<span class="number">6379</span>, decode_responses=<span class="literal">True</span>)</span><br><span class="line">r.<span class="built_in">set</span>(<span class="string">&#x27;name&#x27;</span>, <span class="string">&#x27;Lihua&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(r[<span class="string">&#x27;name&#x27;</span>])</span><br><span class="line"><span class="built_in">print</span>(r.get(<span class="string">&#x27;name&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>redis 提供两个类 Redis 和 StrictRedis, StrictRedis 用于实现大部分官方的命令，Redis 是 StrictRedis 的子类，用于向后兼用旧版本。</p>
+<p>redis 取出的结果默认是字节，可以设定 <strong>decode_responses=True</strong> 改成字符串。</p>
+<h2 id="连接池"><a href="#连接池" class="headerlink" title="连接池"></a>连接池</h2><p>redis-py 使用 connection pool 来管理对一个 redis server 的所有连接，避免每次建立、释放连接的开销。</p>
+<p>默认，每个Redis实例都会维护一个自己的连接池。可以直接建立一个连接池，然后作为参数 Redis，这样就可以实现多个 Redis 实例共享一个连接池。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> redis</span><br><span class="line">pool = redis.ConnectionPool(host=<span class="string">&#x27;localhost&#x27;</span>, port=<span class="number">6379</span>, decode_responses=<span class="literal">True</span>)</span><br><span class="line">r = redis.Redis(connection_pool=pool)</span><br></pre></td></tr></table></figure>
+<h2 id="String操作"><a href="#String操作" class="headerlink" title="String操作"></a>String操作</h2><p>TODO……</p>
+<h2 id="List操作"><a href="#List操作" class="headerlink" title="List操作"></a>List操作</h2><p>TODO……</p>
+<h2 id="Set操作……"><a href="#Set操作……" class="headerlink" title="Set操作……"></a>Set操作……</h2><p>TODO……</p>
+<h2 id="常用操作"><a href="#常用操作" class="headerlink" title="常用操作"></a>常用操作</h2><h3 id="遍历全部key"><a href="#遍历全部key" class="headerlink" title="遍历全部key"></a>遍历全部key</h3><h3 id="……"><a href="#……" class="headerlink" title="……"></a>……</h3>]]></content>
+      <tags>
+        <tag>数据库</tag>
+        <tag>redis</tag>
+        <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Miller-Rabin素数测试算法</title>
     <url>/2022/03/15/Miller-Rabin%E7%B4%A0%E6%95%B0%E6%B5%8B%E8%AF%95%E7%AE%97%E6%B3%95/</url>
     <content><![CDATA[<blockquote>
@@ -211,41 +232,6 @@ a ^ {n-1} = a ^ {2 ^ {s} * d} = (((a^d)^2)\cdots)^2</script><p>从$x=a^d$开始�
       </tags>
   </entry>
   <entry>
-    <title>Python使用redis</title>
-    <url>/2022/02/06/Python%E4%BD%BF%E7%94%A8redis/</url>
-    <content><![CDATA[<h2 id="安装Redis模块"><a href="#安装Redis模块" class="headerlink" title="安装Redis模块"></a>安装Redis模块</h2><p>Python无内置redis工具，需先安装redis模块：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">pip3 install redis</span><br></pre></td></tr></table></figure>
-<h2 id="连接数据库"><a href="#连接数据库" class="headerlink" title="连接数据库"></a>连接数据库</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> redis</span><br><span class="line">r = redis.StrictRedis(host=<span class="string">&#x27;localhost&#x27;</span>, port=<span class="number">6379</span>, decode_responses=<span class="literal">True</span>)</span><br><span class="line">r.<span class="built_in">set</span>(<span class="string">&#x27;name&#x27;</span>, <span class="string">&#x27;Lihua&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(r[<span class="string">&#x27;name&#x27;</span>])</span><br><span class="line"><span class="built_in">print</span>(r.get(<span class="string">&#x27;name&#x27;</span>)</span><br></pre></td></tr></table></figure>
-<p>redis 提供两个类 Redis 和 StrictRedis, StrictRedis 用于实现大部分官方的命令，Redis 是 StrictRedis 的子类，用于向后兼用旧版本。</p>
-<p>redis 取出的结果默认是字节，可以设定 <strong>decode_responses=True</strong> 改成字符串。</p>
-<h2 id="连接池"><a href="#连接池" class="headerlink" title="连接池"></a>连接池</h2><p>redis-py 使用 connection pool 来管理对一个 redis server 的所有连接，避免每次建立、释放连接的开销。</p>
-<p>默认，每个Redis实例都会维护一个自己的连接池。可以直接建立一个连接池，然后作为参数 Redis，这样就可以实现多个 Redis 实例共享一个连接池。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> redis</span><br><span class="line">pool = redis.ConnectionPool(host=<span class="string">&#x27;localhost&#x27;</span>, port=<span class="number">6379</span>, decode_responses=<span class="literal">True</span>)</span><br><span class="line">r = redis.Redis(connection_pool=pool)</span><br></pre></td></tr></table></figure>
-<h2 id="String操作"><a href="#String操作" class="headerlink" title="String操作"></a>String操作</h2><p>TODO……</p>
-<h2 id="List操作"><a href="#List操作" class="headerlink" title="List操作"></a>List操作</h2><p>TODO……</p>
-<h2 id="Set操作……"><a href="#Set操作……" class="headerlink" title="Set操作……"></a>Set操作……</h2><p>TODO……</p>
-<h2 id="常用操作"><a href="#常用操作" class="headerlink" title="常用操作"></a>常用操作</h2><h3 id="遍历全部key"><a href="#遍历全部key" class="headerlink" title="遍历全部key"></a>遍历全部key</h3><h3 id="……"><a href="#……" class="headerlink" title="……"></a>……</h3>]]></content>
-      <tags>
-        <tag>数据库</tag>
-        <tag>redis</tag>
-        <tag>Python</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2022/02/04/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
-  </entry>
-  <entry>
     <title>Safari正则兼容问题记录</title>
     <url>/2022/02/13/Safari%E6%AD%A3%E5%88%99%E5%85%BC%E5%AE%B9%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/</url>
     <content><![CDATA[<p>Halo某主题代码渲染出现问题，查看控制台发现报错如下：</p>
@@ -289,6 +275,46 @@ a ^ {n-1} = a ^ {2 ^ {s} * d} = (((a^d)^2)\cdots)^2</script><p>从$x=a^d$开始�
       <tags>
         <tag>Mac OS</tag>
         <tag>快捷键</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2022/02/04/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>小程序async-await同异步问题</title>
+    <url>/2022/03/15/%E5%B0%8F%E7%A8%8B%E5%BA%8Fasync-await%E5%90%8C%E5%BC%82%E6%AD%A5%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<p>不熟悉node开发和小程序，某次小项目遇到一些异步问题，在此记录📝。</p>
+<h3 id="1-调用异步函数崩溃😡"><a href="#1-调用异步函数崩溃😡" class="headerlink" title="1. 调用异步函数崩溃😡"></a>1. 调用异步函数崩溃😡</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">exports</span>.userLogin = <span class="keyword">async</span> (uname, password) =&gt; &#123;</span><br><span class="line">  <span class="comment">//pass</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>描述：在<code>utils.js</code>中写了<code>userLogin</code>函数，在<code>login/login.js</code>登陆页的<code>login</code>函数中调用，直接崩溃。如下：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">login: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">//……</span></span><br><span class="line">  <span class="keyword">let</span> cookies = userLogin(phone_number, password);</span><br><span class="line">  <span class="comment">//……</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>后了解到<code>async</code>必须和<code>await</code>一起使用，遂更改代码为：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> cookies = <span class="keyword">await</span> userLogin(phone_number, password);</span><br></pre></td></tr></table></figure>
+<p>仍然崩溃，因为<code>login</code>不是异步函数，这时解决方法有两种，第一种是更改<code>login</code>的函数类型，加上<code>async</code>修饰；另一种是用异步函数把异步语句包裹从而和<code>login</code>分离。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">//方法一</span></span><br><span class="line"><span class="attr">login</span>: aysync <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> cookies = userLogin(phone_number, password);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//方法二</span></span><br><span class="line"><span class="attr">login</span>: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  !<span class="keyword">async</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> cookies = userLogin(phone_number, password);</span><br><span class="line">  &#125; ()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-wx-request-success-回调同步🤕"><a href="#2-wx-request-success-回调同步🤕" class="headerlink" title="2. wx.request() success 回调同步🤕"></a>2. wx.request() success 回调同步🤕</h3><p><code>wx.request</code>为异步函数，请求成功后触发success`回调，无法把请求数据传出。</p>
+<p>最开始使用了一种非常笨拙且不优雅的方式传出数据：页面的<code>data</code>数据字典，通过在回调函数中<code>that.setData()</code>存储数据，然后在外部使用<code>this.data.…</code>取出数据。</p>
+<p>后面实在无法忍受这种不方便的写法，找到了<code>Promise</code>的解决方案。使用<code>resolve()</code>把数据传出，但需要在前面加上<code>await</code>来等待异步request执行完毕，不然只会得到Promise对象。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> resp = <span class="keyword">await</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> &#123;</span><br><span class="line">  wx.request(&#123;</span><br><span class="line">    <span class="attr">url</span>: URL,</span><br><span class="line">    <span class="attr">method</span>: METHOD,</span><br><span class="line">    <span class="attr">header</span>: &#123;&#125;,</span><br><span class="line">    <span class="attr">success</span>: <span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">      resolve(res.data)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h3 id="3-wx-request-success-回调中添加异步过程🥴"><a href="#3-wx-request-success-回调中添加异步过程🥴" class="headerlink" title="3. wx.request success 回调中添加异步过程🥴"></a>3. wx.request success 回调中添加异步过程🥴</h3><p>原始代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">testFun</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  wx.request(&#123;</span><br><span class="line">    <span class="attr">success</span>: <span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">let</span> a = <span class="keyword">await</span> ……</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>本以为<code>wx.request</code>的外层函数被<code>async</code>修饰，可以添加<code>await</code>同步，但上面代码报错again。</p>
+<p>解决方法是用<code>async</code>修饰<code>success</code>的回调函数：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">testFun</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  wx.request(&#123;</span><br><span class="line">    <span class="attr">success</span>: <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> (<span class="params">res</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">let</span> a = <span class="keyword">await</span> ……</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="暂时记不起更多问题了，日后追更～（希望永远不要更新）-◐‿◑"><a href="#暂时记不起更多问题了，日后追更～（希望永远不要更新）-◐‿◑" class="headerlink" title="暂时记不起更多问题了，日后追更～（希望永远不要更新）(◐‿◑)﻿"></a>暂时记不起更多问题了，日后追更～（希望永远不要更新）(◐‿◑)﻿</h3>]]></content>
+      <tags>
+        <tag>小程序</tag>
+        <tag>js异步</tag>
       </tags>
   </entry>
 </search>

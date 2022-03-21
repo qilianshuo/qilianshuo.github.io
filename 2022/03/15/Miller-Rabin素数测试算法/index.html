@@ -28,7 +28,7 @@
 <meta property="og:description" content="学习RSA过程中用到了大素数，记录学习过程。  目前没有算法能够直接生成一个素数（据本人了解），只能通过不断生成随机数直到产生素数的方法来生成。如果$n$较小，可以直接对$2$到$\sqrt{n}$ 的所有整数取模验证，但当$n$特别大时，$O(\sqrt{n})$ 复杂度耗费的大量时间是不能被接受的。此时如果牺牲部分准确度来换取时间的优化，即Miller-Rabin算法的思想。 根据百度百科，">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-03-15T10:42:01.000Z">
-<meta property="article:modified_time" content="2022-03-15T14:05:20.434Z">
+<meta property="article:modified_time" content="2022-03-21T08:53:44.921Z">
 <meta property="article:author" content="Mirage">
 <meta property="article:tag" content="素数">
 <meta property="article:tag" content="算法">
@@ -228,9 +228,24 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-03-15 18:42:01 / 修改时间：22:05:20" itemprop="dateCreated datePublished" datetime="2022-03-15T18:42:01+08:00">2022-03-15</time>
+              <time title="创建时间：2022-03-15 18:42:01" itemprop="dateCreated datePublished" datetime="2022-03-15T18:42:01+08:00">2022-03-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-21 16:53:44" itemprop="dateModified" datetime="2022-03-21T16:53:44+08:00">2022-03-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+                </span>
             </span>
 
           <br>
@@ -405,6 +420,12 @@ a ^ {n-1} = a ^ {2 ^ {s} * d} = (((a^d)^2)\cdots)^2</script><p>从$x=a^d$开始�
           <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">

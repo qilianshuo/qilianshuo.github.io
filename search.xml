@@ -1,83 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Flask跨域方案</title>
-    <url>/2022/02/08/Flask%E8%B7%A8%E5%9F%9F%E6%96%B9%E6%A1%88/</url>
-    <content><![CDATA[<blockquote>
-<p>很容易搜索到多种解决方法，暂先记录几种最简单的。</p>
-</blockquote>
-<h3 id="为response添加headers"><a href="#为response添加headers" class="headerlink" title="为response添加headers"></a>为response添加headers</h3><ol>
-<li>使用make_response先创建响应，再给响应添加headers</li>
-</ol>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span>():</span></span><br><span class="line">    rsp = make_response(<span class="string">&#x27;Hello world.&#x27;</span>)</span><br><span class="line">    rsp.headers[<span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>] = <span class="string">&#x27;*&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> rsp</span><br></pre></td></tr></table></figure>
-<ol>
-<li>return响应三元组(response, status, headers)</li>
-</ol>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span>():</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;Hello world&#x27;</span>, <span class="number">200</span>, &#123;<span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>:<span class="string">&#x27;*&#x27;</span>&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="注册请求回调添加headers"><a href="#注册请求回调添加headers" class="headerlink" title="注册请求回调添加headers"></a>注册请求回调添加headers</h3><p>当大量路由都需要允许跨域时，为每个路由逐个添加变得非常麻烦且不易维护。这时可以使用Flask提供的回调接口为请求注册回调，自动添加<code>Access-Control-Allow-Origin</code>的header。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@app.after_request</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">headers_hook</span>(<span class="params">response</span>):</span></span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">&#x27;GET&#x27;</span>:</span><br><span class="line">        response.headers[<span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>] = <span class="string">&#x27;*&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> response</span><br><span class="line"><span class="comment"># 同样可以将app替换为蓝图在局部开启跨域</span></span><br></pre></td></tr></table></figure>
-]]></content>
-      <tags>
-        <tag>Flask</tag>
-        <tag>跨域</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Android11使用HttpCanary</title>
-    <url>/2022/02/12/Android11%E4%BD%BF%E7%94%A8HttpCanary/</url>
-    <content><![CDATA[<blockquote>
-<p>Android11更改了CA证书安装机制，为保证安全关闭了第三方应用安装证书的接口，只能通过系统设置安装证书。</p>
-</blockquote>
-<p><img src="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/image-20220212220614649.png" alt="image-20220212220614649"></p>
-<p>HttpCanary只有在安装完证书后才能导出pem密钥，这也导致其在Android11上无法使用。</p>
-<p>目前的解决办法通常是从软件的缓存目录中提取出CA证书然后在设置中安装，但需要root权限才能访问<code>/data</code>目录。</p>
-<p>最近发现了针对证书问题的修改版，hook证书安装验证函数，使软件得到的数据始终为已安装证书，这样就可以导出证书去设置里安装。搬运<a href="https://pan.baidu.com/s/1ojhzlOYAXKNxas22leXb1w?pwd=7q5f">文件下载地址</a>。</p>
-<p>⚠️注：</p>
-<ul>
-<li><p>证书导出方法：</p>
-<p><code>设置</code> -&gt; <code>HttpCanary根证书</code> -&gt; <code>导出HttpCanary根证书</code> -&gt; <code>Privacy Enhanced Mai(.pem)</code></p>
-<p>导出位置为<code>~/HttpCanary/certs</code></p>
-</li>
-<li><p>设置中安装证书</p>
-<p>不同品牌手机存在差异，通常在<code>安全</code>分类中，或直接在设置中搜索<code>安装证书</code>、<code>CA证书</code>等关键字。</p>
-</li>
-</ul>
-]]></content>
-      <tags>
-        <tag>抓包</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>GitHub删除所有提交历史</title>
-    <url>/2022/02/04/GitHub%E5%88%A0%E9%99%A4%E6%89%80%E6%9C%89%E6%8F%90%E4%BA%A4%E5%8E%86%E5%8F%B2/</url>
-    <content><![CDATA[<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p>将代码保持在当前状态，清空commit history。</p>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>创建新分支 <code>-&gt;</code> 将文件添加到新分支 <code>-&gt;</code> 提交更改 <code>-&gt;</code> 删除旧master分支 <code>-&gt;</code> 重命名新分支 <code>-&gt;</code> 强制更新仓库</p>
-<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><ol>
-<li><p>创建新分支</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git checkout --orphan latest_branch</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>将文件添加到新分支</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git add -A</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>提交更改</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git commit -am &quot;Init new branch&quot;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>删除旧master分支</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git branch -D master</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>重命名新分支</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git branch -m master</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>强制更新仓库</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git push -f origin master</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-]]></content>
-      <tags>
-        <tag>git</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Mac安装Reids并配置</title>
     <url>/2022/02/04/Mac%E5%AE%89%E8%A3%85Reids%E5%B9%B6%E9%85%8D%E7%BD%AE/</url>
     <content><![CDATA[<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><ul>
@@ -151,9 +74,70 @@
 <li>……</li>
 </ul>
 ]]></content>
+      <categories>
+        <category>开发</category>
+      </categories>
       <tags>
         <tag>Redis</tag>
         <tag>数据库</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>GitHub删除所有提交历史</title>
+    <url>/2022/02/04/GitHub%E5%88%A0%E9%99%A4%E6%89%80%E6%9C%89%E6%8F%90%E4%BA%A4%E5%8E%86%E5%8F%B2/</url>
+    <content><![CDATA[<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p>将代码保持在当前状态，清空commit history。</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>创建新分支 <code>-&gt;</code> 将文件添加到新分支 <code>-&gt;</code> 提交更改 <code>-&gt;</code> 删除旧master分支 <code>-&gt;</code> 重命名新分支 <code>-&gt;</code> 强制更新仓库</p>
+<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><ol>
+<li><p>创建新分支</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git checkout --orphan latest_branch</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将文件添加到新分支</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git add -A</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>提交更改</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git commit -am &quot;Init new branch&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>删除旧master分支</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git branch -D master</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重命名新分支</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git branch -m master</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>强制更新仓库</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git push -f origin master</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>学习笔记</category>
+      </categories>
+      <tags>
+        <tag>git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Flask跨域方案</title>
+    <url>/2022/02/08/Flask%E8%B7%A8%E5%9F%9F%E6%96%B9%E6%A1%88/</url>
+    <content><![CDATA[<blockquote>
+<p>很容易搜索到多种解决方法，暂先记录几种最简单的。</p>
+</blockquote>
+<h3 id="为response添加headers"><a href="#为response添加headers" class="headerlink" title="为response添加headers"></a>为response添加headers</h3><ol>
+<li>使用make_response先创建响应，再给响应添加headers</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span>():</span></span><br><span class="line">    rsp = make_response(<span class="string">&#x27;Hello world.&#x27;</span>)</span><br><span class="line">    rsp.headers[<span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>] = <span class="string">&#x27;*&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> rsp</span><br></pre></td></tr></table></figure>
+<ol>
+<li>return响应三元组(response, status, headers)</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span>():</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;Hello world&#x27;</span>, <span class="number">200</span>, &#123;<span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>:<span class="string">&#x27;*&#x27;</span>&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="注册请求回调添加headers"><a href="#注册请求回调添加headers" class="headerlink" title="注册请求回调添加headers"></a>注册请求回调添加headers</h3><p>当大量路由都需要允许跨域时，为每个路由逐个添加变得非常麻烦且不易维护。这时可以使用Flask提供的回调接口为请求注册回调，自动添加<code>Access-Control-Allow-Origin</code>的header。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">@app.after_request</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">headers_hook</span>(<span class="params">response</span>):</span></span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">&#x27;GET&#x27;</span>:</span><br><span class="line">        response.headers[<span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>] = <span class="string">&#x27;*&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> response</span><br><span class="line"><span class="comment"># 同样可以将app替换为蓝图在局部开启跨域</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>开发</category>
+      </categories>
+      <tags>
+        <tag>Flask</tag>
+        <tag>跨域</tag>
       </tags>
   </entry>
   <entry>
@@ -171,10 +155,41 @@
 <h2 id="List操作"><a href="#List操作" class="headerlink" title="List操作"></a>List操作</h2><p>TODO……</p>
 <h2 id="Set操作……"><a href="#Set操作……" class="headerlink" title="Set操作……"></a>Set操作……</h2><p>TODO……</p>
 <h2 id="常用操作"><a href="#常用操作" class="headerlink" title="常用操作"></a>常用操作</h2><h3 id="遍历全部key"><a href="#遍历全部key" class="headerlink" title="遍历全部key"></a>遍历全部key</h3><h3 id="……"><a href="#……" class="headerlink" title="……"></a>……</h3>]]></content>
+      <categories>
+        <category>开发</category>
+      </categories>
       <tags>
         <tag>数据库</tag>
         <tag>redis</tag>
         <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Android11使用HttpCanary</title>
+    <url>/2022/02/12/Android11%E4%BD%BF%E7%94%A8HttpCanary/</url>
+    <content><![CDATA[<blockquote>
+<p>Android11更改了CA证书安装机制，为保证安全关闭了第三方应用安装证书的接口，只能通过系统设置安装证书。</p>
+</blockquote>
+<p><img src="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/image-20220212220614649.png" alt="image-20220212220614649"></p>
+<p>HttpCanary只有在安装完证书后才能导出pem密钥，这也导致其在Android11上无法使用。</p>
+<p>目前的解决办法通常是从软件的缓存目录中提取出CA证书然后在设置中安装，但需要root权限才能访问<code>/data</code>目录。</p>
+<p>最近发现了针对证书问题的修改版，hook证书安装验证函数，使软件得到的数据始终为已安装证书，这样就可以导出证书去设置里安装。搬运<a href="https://pan.baidu.com/s/1ojhzlOYAXKNxas22leXb1w?pwd=7q5f">文件下载地址</a>。</p>
+<p>⚠️注：</p>
+<ul>
+<li><p>证书导出方法：</p>
+<p><code>设置</code> -&gt; <code>HttpCanary根证书</code> -&gt; <code>导出HttpCanary根证书</code> -&gt; <code>Privacy Enhanced Mai(.pem)</code></p>
+<p>导出位置为<code>~/HttpCanary/certs</code></p>
+</li>
+<li><p>设置中安装证书</p>
+<p>不同品牌手机存在差异，通常在<code>安全</code>分类中，或直接在设置中搜索<code>安装证书</code>、<code>CA证书</code>等关键字。</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>逆向</category>
+      </categories>
+      <tags>
+        <tag>抓包</tag>
       </tags>
   </entry>
   <entry>
@@ -205,46 +220,27 @@ a ^ {n-1} = a ^ {2 ^ {s} * d} = (((a^d)^2)\cdots)^2</script><p>从$x=a^d$开始�
 </blockquote>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">long</span> <span class="keyword">long</span> ll;</span><br><span class="line"></span><br><span class="line"><span class="function">ll <span class="title">qMul</span><span class="params">(ll a, ll b, ll mod)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function">ll <span class="title">qPow</span><span class="params">(ll base, ll power, ll mod)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Miller_Rabin</span><span class="params">(ll n, <span class="keyword">int</span> repeat)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ll n;</span><br><span class="line">    <span class="keyword">while</span> (<span class="built_in">printf</span>(<span class="string">&quot;Input a n to judge:\n&quot;</span>) &amp;&amp; <span class="built_in">scanf</span>(<span class="string">&quot;%lld&quot;</span>, &amp;n) != EOF) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(Miller_Rabin(n, <span class="number">10</span>) ? <span class="string">&quot;Yes\n\n&quot;</span> : <span class="string">&quot;No\n\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//quick multiply</span></span><br><span class="line"><span class="function">ll <span class="title">qMul</span><span class="params">(ll a, ll b, ll mod)</span> </span>&#123;</span><br><span class="line">    ll ret = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (b) &#123;</span><br><span class="line">        <span class="keyword">if</span> (b &amp; <span class="number">1</span>) ret = (ret + a) % mod;</span><br><span class="line">        a = (a + a) % mod;</span><br><span class="line">        b &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//quick power</span></span><br><span class="line"><span class="function">ll <span class="title">qPow</span><span class="params">(ll base, ll power, ll mod)</span> </span>&#123;</span><br><span class="line">    ll ret = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (power) &#123;</span><br><span class="line">        <span class="keyword">if</span> (power &amp; <span class="number">1</span>) ret = qMul(ret, base, mod);</span><br><span class="line">        base = qMul(base, base, mod);</span><br><span class="line">        power &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ret % mod;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Miller_Rabin</span><span class="params">(ll n, <span class="keyword">int</span> repeat)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (n == <span class="number">2</span> || n == <span class="number">3</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (n % <span class="number">2</span> == <span class="number">0</span> || n == <span class="number">1</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    ll d = n - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> s = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (!(d &amp; <span class="number">1</span>)) ++s, d &gt;&gt;= <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; repeat; i++) &#123;</span><br><span class="line">        ll a = rand() % (n - <span class="number">3</span>) + <span class="number">2</span>;</span><br><span class="line">        ll x = qPow(a, d, n);</span><br><span class="line">        ll y = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; s; j++) &#123;</span><br><span class="line">            y = qMul(x, x, n);</span><br><span class="line">            <span class="keyword">if</span> (y == <span class="number">1</span> &amp;&amp; x != <span class="number">1</span> &amp;&amp; x != (n - <span class="number">1</span>)) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">            x = y;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (y != <span class="number">1</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 ]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
       <tags>
         <tag>素数</tag>
         <tag>算法</tag>
       </tags>
   </entry>
   <entry>
-    <title>RSSI定位算法学习</title>
-    <url>/2022/03/01/RSSI%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/</url>
-    <content><![CDATA[<ul>
-<li>K最近邻居法</li>
-<li>DV-Hop法</li>
-<li>质心定位算法</li>
-<li>加权质心定位算法</li>
-</ul>
-<hr>
-<ul>
-<li>三边定位算法</li>
-<li>AOA定位算法</li>
-<li>TOA/TDOA算法</li>
-</ul>
+    <title>Hello World</title>
+    <url>/2022/02/04/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 ]]></content>
-      <tags>
-        <tag>RSSI</tag>
-        <tag>定位</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Safari正则兼容问题记录</title>
-    <url>/2022/02/13/Safari%E6%AD%A3%E5%88%99%E5%85%BC%E5%AE%B9%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/</url>
-    <content><![CDATA[<p>Halo某主题代码渲染出现问题，查看控制台发现报错如下：</p>
-<p><img src="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/image-20220213130754875.png" alt="image-20220213130754875"></p>
-<p>定位到错误代码：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> reg = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&quot;(?&lt;=]).+(?=\\[/)&quot;</span>, <span class="string">&quot;g&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> noway = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&quot;(?=\\[noway])(\\S*)(\\[/noway]=?)&quot;</span>, <span class="string">&quot;g&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> buy = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&quot;(?=\\[buy])(\\S*)(\\[/buy]=?)&quot;</span>, <span class="string">&quot;g&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> task = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&quot;(?=\\[task])(\\S*)(\\[/task]=?)&quot;</span>, <span class="string">&quot;g&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> warning = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&quot;(?=\\[warning])(\\S*)(\\[/warning]=?)&quot;</span>, <span class="string">&quot;g&quot;</span>);</span><br></pre></td></tr></table></figure>
-<h2 id="错误分析"><a href="#错误分析" class="headerlink" title="错误分析"></a>错误分析</h2><p>根据控制台报错，问题出现在正则匹配式上。尝试在Chrome上运行该行代码，无报错，至此可以肯定是浏览器的兼容性问题。</p>
-<p>经查阅发现Safari不支持零宽断言，即<code>?&lt;=</code>、<code>?=</code>，解决办法是使用其它表达式替换零宽断言。</p>
-]]></content>
-      <tags>
-        <tag>正则</tag>
-        <tag>Safari</tag>
-      </tags>
   </entry>
   <entry>
     <title>mac OS快捷键</title>
@@ -272,24 +268,55 @@ a ^ {n-1} = a ^ {2 ^ {s} * d} = (((a^d)^2)\cdots)^2</script><p>从$x=a^d$开始�
 <li>⌃ Control </li>
 </ul>
 ]]></content>
+      <categories>
+        <category>学习笔记</category>
+      </categories>
       <tags>
         <tag>Mac OS</tag>
         <tag>快捷键</tag>
       </tags>
   </entry>
   <entry>
-    <title>Hello World</title>
-    <url>/2022/02/04/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+    <title>Safari正则兼容问题记录</title>
+    <url>/2022/02/13/Safari%E6%AD%A3%E5%88%99%E5%85%BC%E5%AE%B9%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/</url>
+    <content><![CDATA[<p>Halo某主题代码渲染出现问题，查看控制台发现报错如下：</p>
+<p><img src="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/image-20220213130754875.png" alt="image-20220213130754875"></p>
+<p>定位到错误代码：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> reg = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&quot;(?&lt;=]).+(?=\\[/)&quot;</span>, <span class="string">&quot;g&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> noway = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&quot;(?=\\[noway])(\\S*)(\\[/noway]=?)&quot;</span>, <span class="string">&quot;g&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> buy = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&quot;(?=\\[buy])(\\S*)(\\[/buy]=?)&quot;</span>, <span class="string">&quot;g&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> task = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&quot;(?=\\[task])(\\S*)(\\[/task]=?)&quot;</span>, <span class="string">&quot;g&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> warning = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&quot;(?=\\[warning])(\\S*)(\\[/warning]=?)&quot;</span>, <span class="string">&quot;g&quot;</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="错误分析"><a href="#错误分析" class="headerlink" title="错误分析"></a>错误分析</h2><p>根据控制台报错，问题出现在正则匹配式上。尝试在Chrome上运行该行代码，无报错，至此可以肯定是浏览器的兼容性问题。</p>
+<p>经查阅发现Safari不支持零宽断言，即<code>?&lt;=</code>、<code>?=</code>，解决办法是使用其它表达式替换零宽断言。</p>
 ]]></content>
+      <categories>
+        <category>踩坑记录📝</category>
+      </categories>
+      <tags>
+        <tag>正则</tag>
+        <tag>Safari</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>RSSI定位算法学习</title>
+    <url>/2022/03/01/RSSI%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/</url>
+    <content><![CDATA[<ul>
+<li>K最近邻居法</li>
+<li>DV-Hop法</li>
+<li>质心定位算法</li>
+<li>加权质心定位算法</li>
+</ul>
+<hr>
+<ul>
+<li>三边定位算法</li>
+<li>AOA定位算法</li>
+<li>TOA/TDOA算法</li>
+</ul>
+]]></content>
+      <categories>
+        <category>学习笔记</category>
+      </categories>
+      <tags>
+        <tag>RSSI</tag>
+        <tag>定位</tag>
+      </tags>
   </entry>
   <entry>
     <title>小程序async-await同异步问题</title>
@@ -312,6 +339,9 @@ a ^ {n-1} = a ^ {2 ^ {s} * d} = (((a^d)^2)\cdots)^2</script><p>从$x=a^d$开始�
 <p>解决方法是用<code>async</code>修饰<code>success</code>的回调函数：</p>
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">testFun</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  wx.request(&#123;</span><br><span class="line">    <span class="attr">success</span>: <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> (<span class="params">res</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">let</span> a = <span class="keyword">await</span> ……</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="暂时记不起更多问题了，日后追更～（希望永远不要更新）-◐‿◑"><a href="#暂时记不起更多问题了，日后追更～（希望永远不要更新）-◐‿◑" class="headerlink" title="暂时记不起更多问题了，日后追更～（希望永远不要更新）(◐‿◑)﻿"></a>暂时记不起更多问题了，日后追更～（希望永远不要更新）(◐‿◑)﻿</h3>]]></content>
+      <categories>
+        <category>踩坑记录📝</category>
+      </categories>
       <tags>
         <tag>小程序</tag>
         <tag>js异步</tag>

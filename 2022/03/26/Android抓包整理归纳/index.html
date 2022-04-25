@@ -20,17 +20,25 @@
     var CONFIG = {"hostname":"qilianshuo.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="越过山丘，才发现无人等候">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Mirage&#39;s Blog">
-<meta property="og:url" content="https://qilianshuo.github.io/categories/%E9%80%86%E5%90%91/index.html">
+  <meta name="description" content="持续记录更新中～🚀  最初接触Android抓包，是需要root的抓包精灵。之后在Windows上使用了很久的Fiddler，并了解到FD也能代理抓包Android，被FD简洁且强大的功能吸引。再之后到现在，使用最多的是HttpCanary，在Android平台上面去了windows代理的麻烦，而且劫持注入等功能也很强大。但是从Android11开始，软件的证书安装出现问题，本来以为作者会尽快">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android抓包总结">
+<meta property="og:url" content="https://qilianshuo.github.io/2022/03/26/Android%E6%8A%93%E5%8C%85%E6%95%B4%E7%90%86%E5%BD%92%E7%BA%B3/index.html">
 <meta property="og:site_name" content="Mirage&#39;s Blog">
-<meta property="og:description" content="越过山丘，才发现无人等候">
+<meta property="og:description" content="持续记录更新中～🚀  最初接触Android抓包，是需要root的抓包精灵。之后在Windows上使用了很久的Fiddler，并了解到FD也能代理抓包Android，被FD简洁且强大的功能吸引。再之后到现在，使用最多的是HttpCanary，在Android平台上面去了windows代理的麻烦，而且劫持注入等功能也很强大。但是从Android11开始，软件的证书安装出现问题，本来以为作者会尽快">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/image-20220326231801336.png">
+<meta property="og:image" content="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/image-20220326231009015.png">
+<meta property="og:image" content="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/image-20220326231853063.png">
+<meta property="og:image" content="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/image-20220326231251186.png">
+<meta property="article:published_time" content="2022-03-26T14:42:36.000Z">
+<meta property="article:modified_time" content="2022-03-26T15:18:58.884Z">
 <meta property="article:author" content="Mirage">
+<meta property="article:tag" content="抓包">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/image-20220326231801336.png">
 
-<link rel="canonical" href="https://qilianshuo.github.io/categories/%E9%80%86%E5%90%91/">
+<link rel="canonical" href="https://qilianshuo.github.io/2022/03/26/Android%E6%8A%93%E5%8C%85%E6%95%B4%E7%90%86%E5%BD%92%E7%BA%B3/">
 
 
 <script id="page-configurations">
@@ -38,12 +46,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>分类: 逆向 | Mirage's Blog</title>
+  <title>Android抓包总结 | Mirage's Blog</title>
   
 
 
@@ -195,71 +203,143 @@
         <div class="content-wrap">
           
 
-          <div class="content category">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">逆向
-          <small>分类</small>
-        </h2>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://qilianshuo.github.io/2022/03/26/Android%E6%8A%93%E5%8C%85%E6%95%B4%E7%90%86%E5%BD%92%E7%BA%B3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Mirage">
+      <meta itemprop="description" content="越过山丘，才发现无人等候">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mirage's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android抓包总结
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-03-26 22:42:36 / 修改时间：23:18:58" itemprop="dateCreated datePublished" datetime="2022-03-26T22:42:36+08:00">2022-03-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%80%86%E5%90%91/" itemprop="url" rel="index"><span itemprop="name">逆向</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>329</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2022</span>
+        <blockquote>
+<p>持续记录更新中～🚀</p>
+</blockquote>
+<p>最初接触Android抓包，是需要root的抓包精灵。之后在Windows上使用了很久的Fiddler，并了解到FD也能代理抓包Android，被FD简洁且强大的功能吸引。再之后到现在，使用最多的是HttpCanary，在Android平台上面去了windows代理的麻烦，而且劫持注入等功能也很强大。但是从Android11开始，软件的证书安装出现问题，本来以为作者会尽快修复bug，提供证书导出手动安装功能，但到现在Android12软件闪退，11上的证书问题依旧没有解决。遂决定写文总结之前的抓包经历，以及之后如何优雅地抓包。</p>
+<h3 id="使用过的抓包工具"><a href="#使用过的抓包工具" class="headerlink" title="使用过的抓包工具"></a>使用过的抓包工具</h3><ol>
+<li><p>抓包精灵（Packet Capture）</p>
+<p><img src="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/image-20220326231801336.png" alt="image-20220326231801336"></p>
+</li>
+<li><p>wicap抓包工具</p>
+<p><img src="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/image-20220326231009015.png" alt="image-20220326231009015"></p>
+</li>
+<li><p>Fiddler</p>
+<p><img src="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/image-20220326231853063.png" alt="image-20220326231853063"></p>
+</li>
+<li><p>HttpCanary</p>
+<p><img src="https://picgo-mirage.oss-cn-hangzhou.aliyuncs.com/image/image-20220326231251186.png" alt="image-20220326231251186"></p>
+</li>
+</ol>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
+        
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2022-03-26T22:42:36+08:00"
-              content="2022-03-26">
-          03-26
-        </time>
-      </div>
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2022/03/26/Android%E6%8A%93%E5%8C%85%E6%95%B4%E7%90%86%E5%BD%92%E7%BA%B3/" itemprop="url">
-            <span itemprop="name">Android抓包总结</span>
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
           </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2022-02-12T21:55:22+08:00"
-              content="2022-02-12">
-          02-12
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2022/02/12/Android11%E4%BD%BF%E7%94%A8HttpCanary/" itemprop="url">
-            <span itemprop="name">Android11使用HttpCanary</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
+        </div>
     </div>
   </div>
-  
-  
-  
 
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E6%8A%93%E5%8C%85/" rel="tag"><i class="fa fa-tag"></i> 抓包</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/03/15/%E5%B0%8F%E7%A8%8B%E5%BA%8Fasync-await%E5%90%8C%E5%BC%82%E6%AD%A5%E9%97%AE%E9%A2%98/" rel="prev" title="小程序async-await同异步问题">
+      <i class="fa fa-chevron-left"></i> 小程序async-await同异步问题
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/04/25/WEP%E5%8F%A3%E4%BB%A4%E5%AE%9E%E9%AA%8C/" rel="next" title="WEP口令实验">
+      WEP口令实验 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
   
 
 
@@ -312,6 +392,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E8%BF%87%E7%9A%84%E6%8A%93%E5%8C%85%E5%B7%A5%E5%85%B7"><span class="nav-number">1.</span> <span class="nav-text">使用过的抓包工具</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
